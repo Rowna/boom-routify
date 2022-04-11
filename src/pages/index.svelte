@@ -1,10 +1,36 @@
 <script>
-    import { metatags } from '@roxi/routify'
-    
-    metatags.title = 'My Routify app'
-    metatags.description = 'Description coming soon...'
-</script>
+    import Hero from "../components/Hero.svelte";
+    // import { onDestroy } from "svelte";
+    // import { app } from "./stores/app";
 
-<h1>Das hier ist die Landing Page!</h1>
+    /* 
+    let showSignup;
+    let showLogin;
+    let unsubscribe;
+    unsubscribe = app.subscribe((app) => {
+      showSignup = app.showSignup;
+      showLogin = app.showLogin;
+    });
+      // onDestroy(unsubscribe);
+      onDestroy(() => {
+        if (unsubscribe) {
+          unsubscribe();
+        }
+      });
+      */
 
-<p>D.h. hier wird der Nutzer begrüßt.</p>
+  </script>
+  
+  <!-- <div class="landingpage__container"> -->
+      <!--  
+    {#if showSignup}
+      <SignUpForm />
+    {/if }
+  
+    {#if showLogin}
+      <LoginForm />
+    {/if }
+   -->
+   <div>
+       <Hero />
+   </div>
