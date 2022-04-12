@@ -3,7 +3,7 @@
 
 <div class="block">
   <div class="img-container">
-    <img class="imge absolute" src="images/prince1.jpeg" alt="Prince" />
+    <img class="imge absolute" src="images/1.jpeg" alt="Prince" />
   </div>
 
   <div class="info">
