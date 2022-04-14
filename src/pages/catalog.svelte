@@ -36,6 +36,7 @@
   <div class="catalog-title">
     <p>BOOM</p>
   </div>
+
   <div class="catalog-container">
     {#each docs as article (article.id)}
       <CatalogItem {article} />
@@ -46,6 +47,29 @@
 <style>
   .catalog {
     margin: 8rem 10rem;
+  }
+  .catalog-title {
+    color: #000;
+    font-family: "Sofia";
+    font-size: 2.3rem;
+    margin-bottom: 0;
+    position: relative;
+    margin-bottom: 3rem;
+
+    /* top: 50%; */
+    left: 100%;
+    transform: translate(-50%, -50%);
+  }
+  .catalog-title::after {
+    position: absolute;
+    content: "Discover Kids Gallery with Pics";
+    color: #9c9898;
+    width: 100%;
+    font-family: "Patrick Hand";
+    font-weight: normal;
+    font-size: 1.2rem;
+    left: 3.2rem;
+    top: 3rem;
   }
   .catalog-container {
     display: grid;
