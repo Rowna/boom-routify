@@ -64,12 +64,15 @@
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons">
+          {#if !$app.user}
           <a class="button singup is-primary" href="/signup">
             <strong>Sign up</strong>
           </a>
 
           <a href="/login" class="button is-light">Log In</a>
-
+          {:else}
+             <p>Buttons fuer den eingeloggten user</p>
+          {/if}
           <!--
           <button class="button singup is-primary" on:click={showSignupFn}>
             <strong>Sign up</strong>

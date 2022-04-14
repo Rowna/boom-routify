@@ -66,7 +66,22 @@
     }
   }
 
+
   function handleSubmit(data) {
+    // ABLAUF:
+    // email und passwort werden aus dem Formular geholt.
+    // email und passwort werden an firebase geschickt.
+    //    --> firebase richtet einen neuen user in der Auth-Datenbank ein
+    //    --> firebase erstellt einen sog. Token, in dem die E-Mail und die 
+    //        user-ID drinstehen, und zwer in einem Objekt, das "user" heisst.
+    //    <<< firebase schickt den Token zurueck an die App.
+    // ab hier ist der User eingeloggt, weil user nicht laenger null ist.
+    // das firebase SDK sorgt jetzt ohne meine Mitarbeit dafuer, dass der Token
+    // bei jeder Datenbankabfrage an firebase zurueckgeschickt wird.
+    // Damit hat Firebase automatisch alle Daten, die es braucht, um zu entscheiden,
+    // ob der User Zugriff auf Datenbankdaten hat oder nicht.
+
+
     console.log("Submitting!");
     /* So hab ich mir die Daten vom BE vorgestellt
       if (
@@ -79,6 +94,7 @@
       }
       */
   }
+
 
   async function sendData() {
     let URL =

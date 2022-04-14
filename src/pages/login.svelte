@@ -11,6 +11,7 @@
   // }
 
   function handleSubmit() {
+    // email und passwort werden an firebase geschickt.
     console.log("Logging in!");
   }
 </script>
