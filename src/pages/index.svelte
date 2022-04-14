@@ -1,9 +1,10 @@
 <script>
-    import Hero from "../components/Hero.svelte";
-    // import { onDestroy } from "svelte";
-    // import { app } from "./stores/app";
+  import Hero from "../components/Hero.svelte";
 
-    /* 
+  import { onDestroy } from "svelte";
+  import { app } from "../stores/app";
+
+  /* */
     let showSignup;
     let showLogin;
     let unsubscribe;
@@ -17,12 +18,11 @@
           unsubscribe();
         }
       });
-      */
+      
+</script>
 
-  </script>
-  
-  <!-- <div class="landingpage__container"> -->
-      <!--  
+<!-- <div class="landingpage__container"> -->
+<!--  
     {#if showSignup}
       <SignUpForm />
     {/if }
@@ -30,7 +30,7 @@
     {#if showLogin}
       <LoginForm />
     {/if }
-   -->
-   <div>
-       <Hero />
-   </div>
+  --> 
+<div>
+  <Hero />
+</div>
