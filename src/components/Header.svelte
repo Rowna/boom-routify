@@ -52,7 +52,6 @@
       aria-label="menu"
       aria-expanded="false"
       data-target="navbarBasicExample"
-
     >
       <span aria-hidden="true" />
       <span aria-hidden="true" />
@@ -65,13 +64,25 @@
       <div class="navbar-item">
         <div class="buttons">
           {#if !$app.user}
-          <a class="button singup is-primary" href="/signup">
-            <strong>Sign up</strong>
-          </a>
+            <a class="button singup is-primary" href="/signup">
+              <strong>Sign up</strong>
+            </a>
 
-          <a href="/login" class="button is-light">Log In</a>
+            <a href="/login" class="button is-light">Log In</a>
           {:else}
-             <p>Buttons fuer den eingeloggten user</p>
+            <!-- <p>Buttons fuer den eingeloggten user</p> -->
+            <div class="header-menu ">
+              <div>
+                <a class="button btn" href="/">Shopping Cart </a>
+              </div>
+              <div class="imge">
+                <img src="../images/herz.png" alt="Fav" />
+              </div>
+
+              <div>
+                <a class="button btn" href="/">Username</a>
+              </div>
+            </div>
           {/if}
           <!--
           <button class="button singup is-primary" on:click={showSignupFn}>
@@ -94,5 +105,16 @@
     font-family: "Sofia";
     font-size: 1.5rem;
     color: rgba(0, 0, 0, 0.7);
+  }
+  .header-menu {
+    display: flex;
+  }
+  .btn {
+    border: none;
+    color: #000;
+  }
+  .imge {
+    width: 28px;
+    height: 28px;
   }
 </style>

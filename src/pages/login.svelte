@@ -1,6 +1,13 @@
 <script>
+  import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
   import Modal from "../containers/Modal.svelte";
   import { app } from "../stores/app";
+  import { redirect } from "@roxi/routify";
+
+  const fbAuth = getAuth();
+  let userInput = { emailInput: "", passWordInput: "" };
+  let fbUser = {};
 
   // function signUpHandler() {
   //   // console.log("Hi from Log In");
@@ -12,6 +19,23 @@
 
   function handleSubmit() {
     // email und passwort werden an firebase geschickt.
+    signInWithEmailAndPassword(
+      fbAuth,
+      userInput.emailInput,
+      userInput.passWordInput
+    )
+      .then((fbCredentials) => {
+        fbUser = fbCredentials.user;
+        app.set({ user: fbUser });
+
+        $redirect("/catalog");
+      })
+      .catch((err) => {
+        console.log(
+          "Uh oh! Konnte nicht einloggen: " + err.message
+        );
+      });
+
     console.log("Logging in!");
   }
 </script>
@@ -21,18 +45,20 @@
   <form class="form">
     <h1 class="title-cont is-medium">BOOM | Log In</h1>
     <div class="form-container">
-      <label for="email">E-Mail or Full Name</label>
+      <label for="email">Your E-Mail</label>
       <input
         required
         type="email"
         class="input is-rounded"
         placeholder="Your E-Mail"
+        bind:value={userInput.emailInput}
       />
-      <label for="password">Password</label>
+      <label for="password">Your Password</label>
       <input
         class="input is-rounded"
         type="password"
-        placeholder="A Strong Password"
+        placeholder="Your Password"
+        bind:value={userInput.passWordInput}
       />
       <a href="/" class="password__">Password forgotten? Choose New!</a>
     </div>
@@ -58,7 +84,7 @@
     border-top-right-radius: 8%;
     border-bottom-left-radius: 10%;
     box-shadow: rgba(17, 17, 26, 0.1) 0px 8px 24px,
-    rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
+      rgba(17, 17, 26, 0.1) 0px 16px 56px, rgba(17, 17, 26, 0.1) 0px 24px 80px;
     padding: 2rem 2rem;
     max-height: fit-content;
     max-width: 800px;
@@ -67,8 +93,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    }
-    @media only screen and (max-width: 700px) {
+  }
+  @media only screen and (max-width: 700px) {
     .base-container {
       width: 300px;
       padding: 5px 5px;

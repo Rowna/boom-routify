@@ -1,6 +1,19 @@
 <script>
   // import Modal from "../containers/Modal.svelte";
+  import { 
+    getAuth, 
+    createUserWithEmailAndPassword 
+  } from "firebase/auth";
+  import { redirect } from '@roxi/routify'
   import { app } from "../stores/app";
+
+  // get a connector to firebase Auth
+  const fbAuth = getAuth();
+  let fbUser = {};
+
+  // subscribe to the '$app' store and set fbuser to $app.user
+  app.subscribe((u) => fbUser = u);
+
 
   let userInput = { fullNameInput: "", emailInput: "", passWordInput: "" };
   let errors = { fullName: "", mail: "", passWord: "" };
@@ -75,12 +88,50 @@
     //    --> firebase erstellt einen sog. Token, in dem die E-Mail und die 
     //        user-ID drinstehen, und zwer in einem Objekt, das "user" heisst.
     //    <<< firebase schickt den Token zurueck an die App.
-    // ab hier ist der User eingeloggt, weil user nicht laenger null ist.
-    // das firebase SDK sorgt jetzt ohne meine Mitarbeit dafuer, dass der Token
-    // bei jeder Datenbankabfrage an firebase zurueckgeschickt wird.
-    // Damit hat Firebase automatisch alle Daten, die es braucht, um zu entscheiden,
-    // ob der User Zugriff auf Datenbankdaten hat oder nicht.
+    
+    createUserWithEmailAndPassword(
+      fbAuth, 
+      userInput.emailInput, 
+      userInput.passWordInput
+      )
+      .then((fbCredentials) => {
+        // ab hier ist der User eingeloggt, weil user nicht laenger null ist.
+        // das firebase SDK sorgt jetzt ohne meine Mitarbeit dafuer, dass der Token
+        // bei jeder Datenbankabfrage an firebase zurueckgeschickt wird.
+        // Damit hat Firebase automatisch alle Daten, die es braucht, um zu entscheiden,
+        // ob der User Zugriff auf Datenbankdaten hat oder nicht.
+        fbUser = fbCredentials.user;
+        app.set({user: fbUser})
 
+        // einen neuen Benutzer mit der ID $app.user.uid in Firestore anlegen!
+        // und den vollstaendigen Namen dort ablegen. (userInput.fullNameInput)
+
+        $redirect("/catalog")
+      })
+      .catch ((err) => {
+        console.log('Uh oh! Konnte keinen neuen Nutzer anlegen: ' + err.message)
+      })
+
+
+
+    // sobald ich das user-objekt von Firebase zurueckbekomme, muesse ich den $app-Store
+    // updaten:
+
+    // $app.set({ user: fbUser })
+
+    // Jetzt kann ich auf jeder Page und in jedem Komponent testen, ob der User
+    // eingeloggt ist oder nicht:
+
+    // if( $app.user) 
+    //    // User ist eingeloggt
+    // else
+    //    // User ist Gast
+
+    // wenn ich das user-objekt von firebase erhalten habe, muess ich ausserdem noch
+    // einen user in der "users"-Collection anlegen. Dieser Eintrag muss folgende
+    // Bedingungen erfuellen:
+    //    * Die IDs in der Auth-Datenbank und in der "users"-DB muessen 1:1 gleich sein.
+    //    * Im Firestore wird der Name aus der Signup-Maske eingetragen.
 
     console.log("Submitting!");
     /* So hab ich mir die Daten vom BE vorgestellt

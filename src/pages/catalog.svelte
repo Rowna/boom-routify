@@ -1,8 +1,16 @@
 <script>
+  import { app } from "../stores/app";
   import CatalogItem from "../components/CatalogItem.svelte";
 
   // firestore-hook installieren
   import { getFirestore, collection, getDocs } from "firebase/firestore";
+
+  if ($app.user) {
+    console.log(`Habe die Email ${$app.user.email}`);
+    console.log($app.user);
+  } else {
+    console.log("Bin gerade nicht eingeloggt.");
+  }
 
   let docs = [];
 
@@ -31,6 +39,16 @@
     })
     .catch((error) => console.error(error));
 </script>
+
+{#if $app.user}
+  <div class="notification is-warning">
+    <p>Bin eingeloggt als {$app.user.email}</p>
+  </div>
+{:else}
+  <div class="notification is-danger">
+    <p>Hat mit dem Einloggen nicht geklappt!</p>
+  </div>
+{/if}
 
 <div class="catalog">
   <div class="catalog-title">
