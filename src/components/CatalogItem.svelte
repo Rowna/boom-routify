@@ -2,14 +2,6 @@
   export let article = {};
 </script>
 
-<!--
-<div class="catalog-container card">
-    <p><img src="images/{article.img}" alt="Bild">{article.img}</p>
-    <p>My title: {article.title}</p>
-    <p>My price: {article.price}</p>
-    <p>My description: {article.desc}</p>
-</div>
--->
 <div class="catalog-item card">
   <div class="card-image">
     <figure class="image">
@@ -21,11 +13,6 @@
     <div class="media-content">
       <p class="title is-3">{article.title}</p>
     </div>
-    <!--  
-    <div class="content">
-      {article.desc}
-    </div>
-    -->
     <br />
     <div class="content">
       <p class="subtitle is-5">
@@ -49,20 +36,9 @@
 </div>
 
 <style>
-  .catalog-item {
-    max-width: 500px;
-  }
-  .image {
-    max-height: 770px;
-    max-width: 600px;
-  }
-  .img {
-    height: 400px;
-    width: 450px;
-  }
   .card-content {
-    align-items: center;
     display: flex;
+    align-items: center;
     flex-direction: column;
   }
   .subtitle {
@@ -82,5 +58,14 @@
   }
   .card-footer {
     margin-top: 1rem;
+  }
+
+  @media only screen and (max-width: 470px) {
+    .is-3 {
+      font-size: 1.3rem;
+    }
+    .is-5 {
+      font-size: 1rem;
+    }
   }
 </style>

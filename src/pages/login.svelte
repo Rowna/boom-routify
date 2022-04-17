@@ -31,9 +31,7 @@
         $redirect("/catalog");
       })
       .catch((err) => {
-        console.log(
-          "Uh oh! Konnte nicht einloggen: " + err.message
-        );
+        console.log("Uh oh! Konnte nicht einloggen: " + err.message);
       });
 
     console.log("Logging in!");

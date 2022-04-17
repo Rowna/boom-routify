@@ -1,91 +1,89 @@
 <script>
 </script>
 
-<div class="block">
+<div class="base-container">
+  <!-- Image -->
   <div class="img-container">
-    <img class="imge absolute" src="images/1.jpeg" alt="Prince" />
+    <img class="img" src="images/1.jpeg" alt="Prince" />
   </div>
 
-  <div class="info">
-    <h1 class="info__title">BOOM</h1>
-    <p>
-      A Page takes you to kids Mode where you can find your
-      kids favorite clothes
+  <!-- Infos -->
+  <div class="info-container">
+    <h1 class="title">BOOM</h1>
+    <p class="subtitle is-6">
+      A Page takes you to kids Mode where you can find your kids favorite
+      clothes
     </p>
+
+    <!-- Button -->
     <button class="button is-primary">
-        <a href="/catalog" class="btn-a">Let's shop</a>
+      <a class="btn" href="/catalog">Let's shop</a>
     </button>
   </div>
 </div>
 
 <style>
-  .block {
-    padding: 0 0;
-    margin: 2rem 6rem;
-    display: flex;
-    /* background-color: #fae4e4; */
-    align-items: center;
-    justify-content: center;
-    border-radius: 15%;
-    height: 100vh;
-  }
-  @media only screen and (max-width: 620px) {
-    .block {
-      margin: 0 15px;
-      flex-direction: column;
+  @media only screen and (min-width: 1024px) {
+    .base-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 2rem 6rem;
     }
-    .info {
-      /* flex-basis: 0; */
-      text-align: start;
-    }
-    .img-container {
-      text-align: center;
-    }
-    .info__title,
-    p {
-      padding: 0;
-      /* text-align: end; */
-      margin: 0;
-      width: 100%;
+    .img {
+      max-width: 80%;
+      border-radius: 3%;
     }
   }
-  
-  .info__title {
+
+  .title {
+    position: relative;
+    display: grid;
+    grid-template-rows: 1fr 2rem;
     font-family: "Sofia";
-    font-weight: bold;
     color: rgba(5, 5, 5, 0.7);
     text-align: end;
     width: 80%;
-    font-size: 20px;
-    margin-bottom: 5px;
-    padding-right: 20px;
+    font-size: 1.5rem;
+    margin: 1rem 0 0 0;
   }
-  p {
+
+  .subtitle {
+    position: absolute;
     width: 80%;
-    margin-bottom: 10px;
+    left: 5%;
   }
-  .info {
-    max-width: 490px;
-    position: relative;
-    font-size: 14px;
-    /* flex-basis: 80%; */
+  @media only screen and (min-width: 570px) {
+    .subtitle {
+      left: 10%;
+      font-size: 1.5rem;
+    }
   }
-  .imge {
-    width: 100%;
-    max-width: 80%;
-    height: 100%;
-    border-radius: 3%;
+  @media only screen and (min-width: 1024px) {
+    .title {
+      width: 90%;
+      font-size: 2rem;
+      margin: 1rem 0 1rem 0;
+    }
+    .subtitle {
+      position: relative;
+      font-size: 1.5rem;
+    }
+    .is-primary {
+      width: 90%;
+    }
   }
+
   .is-primary {
     background-color: #df485b;
     font-family: "Sofia";
     font-size: 1.3rem;
-    width: 75%;
-    margin-top: 2rem;
-    border-radius: 15px;
-}
-.btn-a {
-      color: black;
+    width: 100%;
+    margin: 5rem 0 1rem 0;
+    border-radius: 10px;
+  }
+
+  .btn {
+    color: rgb(242, 242, 242);
   }
 </style>
-
