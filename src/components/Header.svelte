@@ -1,62 +1,67 @@
 <script>
-  import { onDestroy } from "svelte";
+  import { getFirestore, getDoc, doc } from "firebase/firestore";
   import { app } from "../stores/app";
+  import { getAuth } from "firebase/auth";
 
-  // let showSignup = false;
-  // let showLogin = false;
-  // let unsubscribe;
-  // unsubscribe = global.subscribe((glob) => {
-  //   showSignup = glob.showSignup;
-  // });
-  // function showSignupFn() {
-  //   global.update((glob) => {
-  //     glob.showSignup = true;
-  //     return glob;
-  //   });
-  // }
+  const db = getFirestore();
+  let fullUserName = "";
+  const fbAuth = getAuth();
 
-  function showSignupFn() {
-    const myNewAppSettings = {
-      showSignup: true,
-    };
-    app.set(myNewAppSettings);
+  let fbUser = {};
+
+  // Falls der user eingeloggt ist ...
+  if ($app.user) {
+    // wahren Benutzernamen aus '/firestore/users/$app.user.id' holen
+    getDoc(doc(db, `users/${$app.user.uid}`))
+      .then((snapshot) => {
+        // in die bereitgestellte Variable uebertragen
+        fullUserName = snapshot.data().name;
+      })
+      .catch((err) => "Konnte den Username nicht laden:" + err.message);
   }
 
-  function showLogInFn() {
-    const myNewAppSettings = {
-      showLogin: true,
-    };
-    app.set(myNewAppSettings);
+  function LogoutHandler() {
+    // console.log("Ich bin logout!");
+    fbAuth.signOut().then(() => {
+      console.log("SignOut fertig!");
+    });
+    // $app.set({ user: fbUser });
   }
-
-  // unsubscribe = global.subscribe((glob) => {
-  //   showLogin = glob.showLogin;
-  // });
-  // function showLogInFn() {
-  //   global.update((glob) => {
-  //     glob.showLogin = true;
-  //     return glob;
-  //   });
-  // }
-  // onDestroy(unsubscribe);
 </script>
 
 <!-- svelte-ignore a11y-no-redundant-roles -->
 <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item logo" href="/">BOOM</a>
-    <a
-      href="/login"
-      role="button"
-      class="navbar-burger"
-      aria-label="menu"
-      aria-expanded="false"
-      data-target="navbarBasicExample"
-    >
-      <span aria-hidden="true" />
-      <span aria-hidden="true" />
-      <span aria-hidden="true" />
-    </a>
+    {#if !$app.user}
+      <a
+        href="/login"
+        role="button"
+        class="navbar-burger"
+        aria-label="menu"
+        aria-expanded="false"
+        data-target="navbarBasicExample"
+      >
+        <span aria-hidden="true" />
+        <span aria-hidden="true" />
+        <span aria-hidden="true" />
+      </a>
+    {:else}
+      <div class="navbar-item nav-itm">
+        <a class="navbar-btn button is-white" href="/shoppingCart"
+          >Shop Cart</a
+        >
+
+        <div class="select is-white">
+          <select class="sel">
+            <option>{fullUserName}</option>
+            <option on:click={LogoutHandler}>Sign Out</option>
+          </select>
+        </div>
+
+        <!-- <a class="navbar-btn button is-white" href="/">{fullUserName}</a> -->
+      </div>
+    {/if}
   </div>
 
   <div id="navbarBasicExample" class="navbar-menu">
@@ -67,30 +72,29 @@
             <a class="button singup is-primary" href="/signup">
               <strong>Sign up</strong>
             </a>
-
             <a href="/login" class="button is-light">Log In</a>
           {:else}
             <!-- <p>Buttons fuer den eingeloggten user</p> -->
-            <div class="header-menu ">
+            <div class="header-menu">
               <div>
-                <a class="button btn" href="/">Shopping Cart </a>
+                <a class="button is-white" href="/shoppingCart">Shopping Cart</a
+                >
               </div>
               <div class="imge">
                 <img src="../images/herz.png" alt="Fav" />
               </div>
-
-              <div>
-                <a class="button btn" href="/">Username</a>
-              </div>
+              {#if $app.user}
+                <div class="select is-white">
+                  <select class="sel">
+                    <option>{fullUserName}</option>
+                    <option on:click={LogoutHandler}>Sign Out</option>
+                  </select>
+                </div>
+                <!-- {:else} -->
+                <!-- <a href="/">Username</a> -->
+              {/if}
             </div>
           {/if}
-          <!--
-          <button class="button singup is-primary" on:click={showSignupFn}>
-            <strong>Sign up</strong>
-          </button>
-
-          <button class="button is-light" on:click={showLogInFn}>Log In</button>
-            -->
         </div>
       </div>
     </div>
@@ -109,12 +113,32 @@
   .header-menu {
     display: flex;
   }
-  .btn {
-    border: none;
-    color: #000;
+  .sel {
+    color: hsl(0deg, 0%, 4%);
   }
   .imge {
     width: 28px;
     height: 28px;
+  }
+  .navbar-btn {
+    padding: 3px;
+  }
+  /**/
+  .navbar-brand {
+    padding: 0;
+  }
+
+  @media only screen and (min-width: 470px) {
+    .navbar-btn {
+      padding: inherit;
+    }
+    .navbar-brand {
+      justify-content: space-between;
+    }
+  }
+  @media only screen and (min-width: 1023px) {
+    .nav-itm {
+      display: none;
+    }
   }
 </style>

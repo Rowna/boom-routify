@@ -1,32 +1,23 @@
 <script>
   // import Modal from "../containers/Modal.svelte";
-  import { 
-    getAuth, 
-    createUserWithEmailAndPassword 
-  } from "firebase/auth";
-  import { redirect } from '@roxi/routify'
+  import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+  import { doc, setDoc, getFirestore } from "firebase/firestore";
+  import { redirect } from "@roxi/routify";
   import { app } from "../stores/app";
 
   // get a connector to firebase Auth
   const fbAuth = getAuth();
   let fbUser = {};
 
-  // subscribe to the '$app' store and set fbuser to $app.user
-  app.subscribe((u) => fbUser = u);
+  const db = getFirestore();
 
+  // subscribe to the '$app' store and set fbuser to $app.user
+  app.subscribe((u) => (fbUser = u));
 
   let userInput = { fullNameInput: "", emailInput: "", passWordInput: "" };
   let errors = { fullName: "", mail: "", passWord: "" };
 
   let isValid = false;
-
-  // logInHandler wird aufgerufen, wenn der User auf Login-Button klickt
-  function logInHandler() {
-    const myNewGlob = {
-      showLogin: true,
-    };
-    app.set(myNewGlob);
-  }
 
   // Name Validierung durch RegEx
   function nameValid(pFullname) {
@@ -79,21 +70,20 @@
     }
   }
 
-
   function handleSubmit(data) {
     // ABLAUF:
     // email und passwort werden aus dem Formular geholt.
     // email und passwort werden an firebase geschickt.
     //    --> firebase richtet einen neuen user in der Auth-Datenbank ein
-    //    --> firebase erstellt einen sog. Token, in dem die E-Mail und die 
+    //    --> firebase erstellt einen sog. Token, in dem die E-Mail und die
     //        user-ID drinstehen, und zwer in einem Objekt, das "user" heisst.
     //    <<< firebase schickt den Token zurueck an die App.
-    
+
     createUserWithEmailAndPassword(
-      fbAuth, 
-      userInput.emailInput, 
+      fbAuth,
+      userInput.emailInput,
       userInput.passWordInput
-      )
+    )
       .then((fbCredentials) => {
         // ab hier ist der User eingeloggt, weil user nicht laenger null ist.
         // das firebase SDK sorgt jetzt ohne meine Mitarbeit dafuer, dass der Token
@@ -101,18 +91,29 @@
         // Damit hat Firebase automatisch alle Daten, die es braucht, um zu entscheiden,
         // ob der User Zugriff auf Datenbankdaten hat oder nicht.
         fbUser = fbCredentials.user;
-        app.set({user: fbUser})
+        app.set({ user: fbUser });
+
+        // wenn ich das user-objekt von firebase erhalten habe, muss ich ausserdem noch
+        // einen user in der "users"-Collection anlegen. Dieser Eintrag muss folgende
+        // Bedingungen erfuellen:
+        //    * Die IDs in der Auth-Datenbank und in der "users"-DB muessen 1:1 gleich sein.
+        //    * Im Firestore wird der Name aus der Signup-Maske eingetragen.
 
         // einen neuen Benutzer mit der ID $app.user.uid in Firestore anlegen!
         // und den vollstaendigen Namen dort ablegen. (userInput.fullNameInput)
-
-        $redirect("/catalog")
+        // setDoc() ist wieder ASYNCHRON, d.h. es gibt ein Ergebnis zurueck, das
+        // erneut in ein Promise "verpackt" wird. dieses Ergebnis wird der
+        // Form halber im naechsten .then() als callback-argument eingefangen.
+        return setDoc(doc(db, `/users/${$app.user.uid}`, ""), {
+          name: userInput.fullNameInput,
+        });
       })
-      .catch ((err) => {
-        console.log('Uh oh! Konnte keinen neuen Nutzer anlegen: ' + err.message)
-      })
-
-
+      .then((setDocResult) => $redirect("/catalog"))
+      .catch((err) => {
+        console.log(
+          "Uh oh! Konnte keinen neuen Nutzer anlegen: " + err.message
+        );
+      });
 
     // sobald ich das user-objekt von Firebase zurueckbekomme, muesse ich den $app-Store
     // updaten:
@@ -122,59 +123,13 @@
     // Jetzt kann ich auf jeder Page und in jedem Komponent testen, ob der User
     // eingeloggt ist oder nicht:
 
-    // if( $app.user) 
+    // Dieser Schritt ist nicht nötig, weil: 
+    // Wenn ( $app.user) erscheint der {fullUserName} , 
+    // UND wen nicht erscheinen die Buttons Signup & Log In 
+    // if( $app.user)
     //    // User ist eingeloggt
     // else
     //    // User ist Gast
-
-    // wenn ich das user-objekt von firebase erhalten habe, muess ich ausserdem noch
-    // einen user in der "users"-Collection anlegen. Dieser Eintrag muss folgende
-    // Bedingungen erfuellen:
-    //    * Die IDs in der Auth-Datenbank und in der "users"-DB muessen 1:1 gleich sein.
-    //    * Im Firestore wird der Name aus der Signup-Maske eingetragen.
-
-    console.log("Submitting!");
-    /* So hab ich mir die Daten vom BE vorgestellt
-      if (
-        userInput.fullNameInput == data.fullNameInput &&
-        userInput.emailInput == data.emailInput
-      ) {
-        // Fehlermeldung in UI, dass die Daten im BE  existieren
-      } else {
-        sendData();
-      }
-      */
-  }
-
-
-  async function sendData() {
-    let URL =
-      "https://svelte-bulma-default-rtdb.europe-west1.firebasedatabase.app/users.json";
-    console.log("Data Sent!");
-    // 1. bring the URL
-    // JSON.stringify() macht aus einem JavaScript-Objekt einen JSON-String
-    // JSON.parse() macht aus einem JSON-String ein JavaScript-Objekt
-    fetch(URL, {
-      method: "POST",
-      body: JSON.stringify(userInput),
-      headers: {
-        content: "application/json",
-      },
-    })
-      // 2. then take it as a parameter "response" (when it is done)
-      // Die response, die vom Backend-Server kommt, ist erst einmal
-      // nur ein String. fetch() wandelt diesen String automatisch
-      // in ein JS-Objekt um. Das Ergebnis wird als 'response' an
-      // die anonyme Handler-Funktion in then() übergeben.
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Faild");
-        }
-        // ...
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   }
 </script>
 
@@ -259,7 +214,6 @@
       padding: 5px 5px;
       margin: 10px;
     }
-    
   }
 
   .form {
