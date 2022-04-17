@@ -2,9 +2,24 @@
 </script>
 
 <div class="base-container">
-  <!-- Image -->
+  <!-- Image fürs Handy -->
   <div class="img-container">
     <img class="img" src="images/1.jpeg" alt="Prince" />
+  </div>
+
+  <!-- Image für Bildschirm -->
+  <div class="base-images">
+    <div class="images up">
+      <img class="img-item" src="images/6.jpeg" alt="" />
+    </div>
+
+    <div class="images middle">
+      <img class="img-item" src="images/2.jpeg" alt="" />
+    </div>
+
+    <div class="images down">
+      <img class="img-item" src="images/1.jpeg" alt="" />
+    </div>
   </div>
 
   <!-- Infos -->
@@ -23,16 +38,51 @@
 </div>
 
 <style>
+  .images {
+    display: none;
+  }
+  @media only screen and (min-width: 1024px) {
+    .images {
+      display: block;
+    }
+    .img-item {
+      box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
+        rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+        rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+      border-radius: 5%;
+    }
+    .down {
+      width: 50%;
+      z-index: 1;
+    }
+    .middle {
+      position: absolute;
+      top: 15%;
+      left: 25%;
+      width: 30%;
+      z-index: 2;
+    }
+    .up {
+      position: absolute;
+      top: 30%;
+      left: 9%;
+      width: 27%;
+      z-index: 3;
+    }
+    .img-container {
+      display: none;
+    }
+  }
+  .info-container {
+    padding-top: 5rem;
+  }
+
   @media only screen and (min-width: 1024px) {
     .base-container {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 2rem 6rem;
-    }
-    .img {
-      max-width: 80%;
-      border-radius: 3%;
+      margin: 4rem 2rem 6rem;
     }
   }
 
@@ -73,7 +123,6 @@
       width: 90%;
     }
   }
-
   .is-primary {
     background-color: #df485b;
     font-family: "Sofia";
