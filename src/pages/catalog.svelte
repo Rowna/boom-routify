@@ -2,24 +2,21 @@
   import { app } from "../stores/app";
   import CatalogItem from "../components/CatalogItem.svelte";
 
-  // firestore-hook installieren
-  import { getFirestore, collection, getDocs } from "firebase/firestore";
+  // // firestore-hook importieren
+  import { collection, getDocs, getFirestore } from "firebase/firestore";
+
+  const db = getFirestore();
 
   if ($app.user) {
     console.log(`Habe die Email ${$app.user.email}`);
-    console.log($app.user);
   } else {
     console.log("Bin gerade nicht eingeloggt.");
   }
 
   let docs = [];
 
-  // firestore-Connector initialisiern
-  // damit haben wir die Verbindung zu meiner Firestore-Datenbank
-  // im Firebase-"svelte-bulma"-Projekt.
-  const db = getFirestore();
-
-  // Connector zur "articles"-Collecion erstellen
+  // Connector zur "articles"-Collecion erstellen mit Hilfe des
+  // firestore-connectors in $app
   const fbArticles = collection(db, "articles");
 
   // Artikel-"Zip"aus Firestore downloaden;
@@ -53,6 +50,7 @@
 <div class="catalog">
   <div class="catalog-title">
     <p>BOOM</p>
+    <p class="subtitle is-7">Discover Kids Gallery with Pics</p>
   </div>
 
   <div class="catalog-container">
@@ -64,52 +62,70 @@
 
 <style>
   .catalog {
-    margin: 8rem 10rem;
+    margin: 1.2rem 1.2rem;
   }
   .catalog-title {
-    color: #000;
     font-family: "Sofia";
     font-size: 2.3rem;
-    margin-bottom: 0;
+    color: #000;
+    text-align: center;
+    display: grid;
     position: relative;
-    margin-bottom: 3rem;
 
-    /* top: 50%; */
-    left: 100%;
-    transform: translate(-50%, -50%);
+    grid-template-rows: 1fr 2rem;
+    justify-items: center;
   }
-  .catalog-title::after {
-    position: absolute;
-    content: "Discover Kids Gallery with Pics";
+  @media only screen and (min-width: 670px) {
+    .catalog-title {
+      position: relative;
+    }
+  }
+
+  .subtitle {
     color: #9c9898;
-    width: 100%;
     font-family: "Patrick Hand";
-    font-weight: normal;
-    font-size: 1.2rem;
-    left: 3.2rem;
-    top: 3rem;
+    font-size: 1rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
   }
+
+  /* Diese Einstellungen gelten fuer alle, auch fuer das handy!*/
   .catalog-container {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
     justify-items: center;
-    row-gap: 30px;
-    column-gap: 5px;
+    margin: 1rem 3rem;
+    row-gap: 3rem;
   }
-  @media only screen and (max-width: 950px) {
+  /*  Ab 670px wird es 1fr 1fr gelten */
+  @media only screen and (min-width: 670px) {
     .catalog-container {
-      flex-direction: column;
-      row-gap: 10px;
-      column-gap: 10px;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 2.5rem;
     }
   }
-  @media only screen and (max-width: 1950px) {
+  @media only screen and (min-width: 979px) {
     .catalog-container {
-      flex-direction: column;
-      row-gap: 30px;
-      column-gap: 30px;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
     }
   }
+  @media only screen and (min-width: 1420px) {
+    .catalog-container {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      row-gap: 2rem;
+      column-gap: 1rem;
+    }
+  }
+  @media only screen and (min-width: 1820px) {
+    .catalog-container {
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      row-gap: 2rem;
+      column-gap: 3rem;
+    }
+  }
+
   @media only screen and (max-width: 800px) {
     .catalog {
       margin: 15px 15px;
