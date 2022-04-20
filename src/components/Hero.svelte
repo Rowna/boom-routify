@@ -49,7 +49,7 @@
       box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
         rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
         rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
-      border-radius: 5%;
+      border-radius: 3%;
     }
     .down {
       width: 50%;
@@ -106,7 +106,7 @@
   @media only screen and (min-width: 570px) {
     .subtitle {
       left: 10%;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
     }
   }
   @media only screen and (min-width: 1024px) {
@@ -117,7 +117,6 @@
     }
     .subtitle {
       position: relative;
-      font-size: 1.5rem;
     }
     .is-primary {
       width: 90%;
