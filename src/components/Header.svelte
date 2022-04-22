@@ -1,31 +1,59 @@
 <script>
-  import { getFirestore, getDoc, doc } from "firebase/firestore";
-  import { app } from "../stores/app";
-  import { getAuth } from "firebase/auth";
+  import { redirect } from "@roxi/routify";
+
+  import {
+    connectFirestoreEmulator,
+    doc,
+    getDoc,
+    getFirestore,
+  } from "firebase/firestore";
+
+  import {
+    getAuth,
+    onAuthStateChanged,
+    connectAuthEmulator,
+  } from "firebase/auth";
 
   const db = getFirestore();
-  let fullUserName = "";
+  connectFirestoreEmulator(db, "localhost", 8888);
+
   const fbAuth = getAuth();
+  connectAuthEmulator(fbAuth, "http://localhost:8080");
+  let user = fbAuth.currentUser; // kommt im moment nirgendwo vor.
+  let fullUserName = "";
+  let logoutButton = false;
 
-  let fbUser = {};
+  // wenn sich zb auf der login-page oder der signup-page der Auth-Status aendert ...
+  onAuthStateChanged(fbAuth, (fbUser) => {
+    user = fbUser;
 
-  // Falls der user eingeloggt ist ...
-  if ($app.user) {
-    // wahren Benutzernamen aus '/firestore/users/$app.user.id' holen
-    getDoc(doc(db, `users/${$app.user.uid}`))
-      .then((snapshot) => {
-        // in die bereitgestellte Variable uebertragen
-        fullUserName = snapshot.data().name;
+    // Falls der user neu eingeloggt ist ...
+    if (fbUser !== null) {
+      // wahren Benutzernamen aus '/firestore/users/$app.user.id' holen
+      getDoc(doc(db, `users/${user.uid}`))
+        .then((snapshot) => {
+          fullUserName = snapshot.data().name;
+          console.log(fullUserName);
+        })
+        .catch((error) => "Konnte den Username nicht laden:" + error.message);
+    } else {
+      user = null; // wird schon in Z.30 geklaert.
+      console.log("User is signed out! ");
+    }
+  });
+
+  function logoutHandler() {
+    logoutButton = true;
+    fbAuth
+      // ist ASYNCHRON, d.h. die noetigen anpassungen im
+      // .then vornehmen.
+      .signOut()
+      .then(() => {
+        user = fbAuth.currentUser;
+        console.log("Ausgeloggt!");
+        $redirect("/");
       })
-      .catch((err) => "Konnte den Username nicht laden:" + err.message);
-  }
-
-  function LogoutHandler() {
-    // console.log("Ich bin logout!");
-    fbAuth.signOut().then(() => {
-      console.log("SignOut fertig!");
-    });
-    // $app.set({ user: fbUser });
+      .catch((error) => "Konnte nicht ausloggen: " + error.message);
   }
 </script>
 
@@ -33,7 +61,8 @@
 <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item logo" href="/">BOOM</a>
-    {#if !$app.user}
+    <!-- Mobile Version / If User nicht eingeloggt -->
+    {#if !fbAuth.currentUser && !logoutButton}
       <a
         href="/login"
         role="button"
@@ -48,18 +77,15 @@
       </a>
     {:else}
       <div class="navbar-item nav-itm">
-        <a class="navbar-btn button is-white" href="/shoppingCart"
-          >Shop Cart</a
-        >
-
-        <div class="select is-white">
-          <select class="sel">
-            <option>{fullUserName}</option>
-            <option on:click={LogoutHandler}>Sign Out</option>
-          </select>
+        <div class="navbar-end">
+          <a class="navbar-btn button is-white" href="/cart">Cart</a>
+          <div class="select is-white">
+            <select class="sel">
+              <option>{fullUserName}</option>
+              <option on:click={logoutHandler}>Logout</option>
+            </select>
+          </div>
         </div>
-
-        <!-- <a class="navbar-btn button is-white" href="/">{fullUserName}</a> -->
       </div>
     {/if}
   </div>
@@ -68,31 +94,26 @@
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons">
-          {#if !$app.user}
+          <!-- Desktop Version / If User nicht eingeloggt ist -->
+          {#if !fbAuth.currentUser && !logoutButton}
             <a class="button singup is-primary" href="/signup">
               <strong>Sign up</strong>
             </a>
             <a href="/login" class="button is-light">Log In</a>
           {:else}
-            <!-- <p>Buttons fuer den eingeloggten user</p> -->
             <div class="header-menu">
               <div>
-                <a class="button is-white" href="/shoppingCart">Shopping Cart</a
-                >
+                <a class="button is-white" href="/cart">Shopping Cart</a>
               </div>
               <div class="imge">
                 <img src="../images/herz.png" alt="Fav" />
               </div>
-              {#if $app.user}
-                <div class="select is-white">
-                  <select class="sel">
-                    <option>{fullUserName}</option>
-                    <option on:click={LogoutHandler}>Sign Out</option>
-                  </select>
-                </div>
-                <!-- {:else} -->
-                <!-- <a href="/">Username</a> -->
-              {/if}
+              <div class="select is-white">
+                <select class="sel">
+                  <option>{fullUserName}</option>
+                  <option on:click={logoutHandler}>Logout</option>
+                </select>
+              </div>
             </div>
           {/if}
         </div>
@@ -123,17 +144,14 @@
   .navbar-btn {
     padding: 3px;
   }
-  /**/
   .navbar-brand {
     padding: 0;
   }
 
-  @media only screen and (min-width: 470px) {
-    .navbar-btn {
-      padding: inherit;
-    }
-    .navbar-brand {
-      justify-content: space-between;
+  @media only screen and (max-width: 1024px) {
+    .nav-itm {
+      justify-content: flex-end;
+      margin-left: auto;
     }
   }
   @media only screen and (min-width: 1023px) {

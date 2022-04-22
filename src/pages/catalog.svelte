@@ -1,14 +1,18 @@
 <script>
   import { app } from "../stores/app";
   import CatalogItem from "../components/CatalogItem.svelte";
+  import { getAuth } from "firebase/auth";
 
   // // firestore-hook importieren
   import { collection, getDocs, getFirestore } from "firebase/firestore";
 
   const db = getFirestore();
+  const fbAuth = getAuth();
+  const user = fbAuth.currentUser;
 
-  if ($app.user) {
-    console.log(`Habe die Email ${$app.user.email}`);
+
+  if (user !== null) {
+    console.log(`Habe die Email ${user.email}`);
   } else {
     console.log("Bin gerade nicht eingeloggt.");
   }
@@ -25,7 +29,7 @@
   // Diese Aktion ist ASYNCHRON!, deshalb muss ich mit Promises weiterarbeiten
   getDocs(fbArticles)
     .then((snapshot) => {
-      console.log("bin im Promise!");
+      // console.log("bin im Promise!");
       let theArticles = [];
       snapshot.docs.forEach((doc) => {
         // die Daten aud dem Firebase-"document" , die drin stehen.
@@ -37,9 +41,9 @@
     .catch((error) => console.error(error));
 </script>
 
-{#if $app.user}
+{#if user !== null}
   <div class="notification is-warning">
-    <p>Bin eingeloggt als {$app.user.email}</p>
+    <p>Bin eingeloggt als {user.email}</p>
   </div>
 {:else}
   <div class="notification is-danger">

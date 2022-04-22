@@ -1,7 +1,9 @@
 <script>
-  import { app } from "../stores/app";
+  import { getAuth } from "firebase/auth";
 
   export let article = {};
+  const fbAuth = getAuth();
+  let user = fbAuth.currentUser;
 
   let cartImage = "shopping-cart";
 
@@ -25,7 +27,7 @@
     </figure>
 
     <footer class="card-footer">
-      {#if $app.user}
+      {#if user !== null}
         <p class="card-footer-item">
           <!-- svelte-ignore a11y-missing-attribute -->
           <a class="cart-img" on:click={addToCartHandler}>
@@ -40,18 +42,6 @@
         </p>
       {:else}
         <div class="card-foot container">You should log in!</div>
-        <!--  
-        <p class="card-footer-item">
-          <a class="cart-img">
-            <img src="../public/images/shopping-cart.png" alt="shopping-cart" />
-          </a>
-        </p>
-        <p class="card-footer-item">
-          <a class="fav-img">
-            <img src="../public/images/herz-ohne.png" alt="fav-img" />
-          </a>
-        </p>
-      -->
       {/if}
     </footer>
   </div>
@@ -93,7 +83,6 @@
     cursor: pointer;
   }
   .card-footer {
-    /* margin-top: 1rem; */
     background-color: rgb(255, 255, 255);
     position: absolute;
     bottom: 0;

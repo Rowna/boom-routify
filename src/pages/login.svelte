@@ -1,21 +1,13 @@
 <script>
   import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-  import Modal from "../containers/Modal.svelte";
-  import { app } from "../stores/app";
+  // import Modal from "../containers/Modal.svelte";
+  // import { app } from "../stores/app";
   import { redirect } from "@roxi/routify";
 
   const fbAuth = getAuth();
   let userInput = { emailInput: "", passWordInput: "" };
   let fbUser = {};
-
-  // function signUpHandler() {
-  //   // console.log("Hi from Log In");
-  //   const myNewGlob = {
-  //     showSignup: true,
-  //   };
-  //   app.set(myNewGlob);
-  // }
 
   function handleSubmit() {
     // email und passwort werden an firebase geschickt.
@@ -26,7 +18,7 @@
     )
       .then((fbCredentials) => {
         fbUser = fbCredentials.user;
-        app.set({ user: fbUser });
+        // app.set({ user: fbUser });
 
         $redirect("/catalog");
       })
@@ -71,7 +63,7 @@
   </div>
   <div class="para-contianer">
     <p class="para__title">Password forgotten?</p>
-    <span class="__span">|</span>
+    <span class="line">|</span>
     <a class="para__title __member" href="/signup">New Member?</a>
   </div>
 </div>
@@ -163,7 +155,7 @@
   .__member {
     color: #df485b;
   }
-  .__span {
+  .line {
     color: rgb(31, 28, 28);
   }
   .password__ {

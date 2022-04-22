@@ -7,12 +7,8 @@
 
   // get a connector to firebase Auth
   const fbAuth = getAuth();
-  let fbUser = {};
-
   const db = getFirestore();
-
-  // subscribe to the '$app' store and set fbuser to $app.user
-  app.subscribe((u) => (fbUser = u));
+  let fbUser = fbAuth.currentUser;
 
   let userInput = { fullNameInput: "", emailInput: "", passWordInput: "" };
   let errors = { fullName: "", mail: "", passWord: "" };
@@ -79,6 +75,7 @@
     //        user-ID drinstehen, und zwer in einem Objekt, das "user" heisst.
     //    <<< firebase schickt den Token zurueck an die App.
 
+    // geht raus an Firebase im Internet oder im Emulator!
     createUserWithEmailAndPassword(
       fbAuth,
       userInput.emailInput,
@@ -91,7 +88,7 @@
         // Damit hat Firebase automatisch alle Daten, die es braucht, um zu entscheiden,
         // ob der User Zugriff auf Datenbankdaten hat oder nicht.
         fbUser = fbCredentials.user;
-        app.set({ user: fbUser });
+        // app.set({ user: fbUser });
 
         // wenn ich das user-objekt von firebase erhalten habe, muss ich ausserdem noch
         // einen user in der "users"-Collection anlegen. Dieser Eintrag muss folgende
@@ -104,7 +101,7 @@
         // setDoc() ist wieder ASYNCHRON, d.h. es gibt ein Ergebnis zurueck, das
         // erneut in ein Promise "verpackt" wird. dieses Ergebnis wird der
         // Form halber im naechsten .then() als callback-argument eingefangen.
-        return setDoc(doc(db, `/users/${$app.user.uid}`, ""), {
+        return setDoc(doc(db, `/users/${fbUser.uid}`, ""), {
           name: userInput.fullNameInput,
         });
       })
@@ -114,11 +111,6 @@
           "Uh oh! Konnte keinen neuen Nutzer anlegen: " + err.message
         );
       });
-
-    // sobald ich das user-objekt von Firebase zurueckbekomme, muesse ich den $app-Store
-    // updaten:
-
-    // $app.set({ user: fbUser })
 
     // Jetzt kann ich auf jeder Page und in jedem Komponent testen, ob der User
     // eingeloggt ist oder nicht:

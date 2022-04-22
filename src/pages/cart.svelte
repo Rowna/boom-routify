@@ -24,14 +24,12 @@
 
 <style>
   .base-container {
-    /* text-align: center; */
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding: 2rem 2rem;
     margin-left: 4rem;
     margin-right: 4rem;
-    /* max-width: 800px; */
   }
   .box {
     height: 500px;
