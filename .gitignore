@@ -1,4 +1,8 @@
-node_modules
-.routify
+.firebase.json
 .history
+.routify
 dist
+fbEmulator-data/
+firebase-debug.log
+firestore-debug.log
+node_modules/
