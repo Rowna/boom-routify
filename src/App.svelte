@@ -3,14 +3,7 @@
   import firebase_config from "./server/firebase_config";
 
   // Firebase 9
-  import { initializeApp } from "firebase/app";
-  // firestore-hook installieren
-  import { 
-    getFirestore, 
-    collection,
-    getDocs
-   } from "firebase/firestore";
-
+  import { initializeApp } from "firebase/app";  
 
   import { Router } from "@roxi/routify";
   import { routes } from "../.routify/routes";
@@ -19,6 +12,7 @@
 
   // Firebase 9
   const fb = initializeApp(firebase_config);
+
   
 </script>
 

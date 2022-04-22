@@ -14,6 +14,11 @@ Feature: Navbar
         And I see a little bookmark section in the navbar
         And I see a catalog link on the navbar.
 
+    # Fremd oder Gast:
+    # ( Sign Up - Log In ) Buttons
+    # Angemeldet:
+    # ( Shopping Cart - Heart - Username -- Logout) Buttons
+    
     # Das mit der Navbar ist im Moment ein bisschen schwierig, 
     # weil ich erst klare Vorstellungen über die anderen 
     # Features brauche, um zu entscheiden, was ich

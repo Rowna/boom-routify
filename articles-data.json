@@ -1,0 +1,100 @@
+[
+  {
+    "category": "Anzug",
+    "desc": "Anzug für Sommer",
+    "img": "19.jpeg",
+    "price": 16.99,
+    "title": "Junge Anzug"
+  },
+  {
+    "category": "Anzug",
+    "desc": "Black Uniform",
+    "img": "11.jpeg",
+    "price": 25.99,
+    "title": "Junge Anzug"
+  },
+  {
+    "category": "Kleid",
+    "desc": "Junge Hose und Mädchen Kleid",
+    "img": "5.jpeg",
+    "price": 20.99,
+    "title": "Hose und Kleid"
+  },
+  {
+    "category": "Kleid",
+    "desc": "Beschreibung des Kleides",
+    "img": "2.jpeg",
+    "price": 29.99,
+    "title": "Mädchenkleid"
+  },
+  {
+    "category": "Anzug",
+    "desc": "Junge Blauer Anzug",
+    "img": "17.jpeg",
+    "": 19.99,
+    "title": "Blauer Anzug"
+  },
+  {
+    "category": "Anzug",
+    "desc": "Mädchen Schlafanzug Pink",
+    "img": "14.jpeg",
+    "price": 14.99,
+    "title": "Mädchen Schlafanzug"
+  },
+  {
+    "category": "Kleid",
+    "desc": "Kleid für Mädchen, pink",
+    "img": "7.jpg",
+    "price": 89.99,
+    "title": "Kleid Mädchen"
+  },
+  {
+    "category": "Kleid",
+    "desc": "Mädchenkleid für Geburtstage",
+    "img": "8.jpeg",
+    "price": 29.99,
+    "title": "Mädchenkleid"
+  },
+  {
+    "category": "Anzug",
+    "desc": "Zwei Anzüge Kinder",
+    "img": "9.jpeg",
+    "price": 29.99,
+    "title": "Twins X-Mas"
+  },
+  {
+    "category": "Hose",
+    "desc": "Beschreibung der Hose",
+    "img": "3.jpeg",
+    "price": 19.99,
+    "title": "Hosen"
+  },
+  {
+    "category": "Anzug",
+    "desc": "Mädchen kurze Hose",
+    "img": "10.jpeg",
+    "price": 19.99,
+    "title": "Mädchen Anzug"
+  },
+  {
+    "category": "Anzug",
+    "desc": "Anzug Gelb",
+    "img": "13.JPG",
+    "price": 28.99,
+    "title": "Junge Anzug"
+  },
+  {
+    "category": "Kleid",
+    "desc": "Einfaches Kleid",
+    "img": "16.jpeg",
+    "price": 24.99,
+    "title": "Kleid für Mädchen, nicht für Jungs."
+  },
+  {
+    "category": "Anzug",
+    "desc": "Jungenanzug für Hochzeiten",
+    "img": "15.jpeg",
+    "price": 29.99,
+    "title": "Hochzeitsanzug"
+  }
+]
