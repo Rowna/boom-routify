@@ -1,8 +1,5 @@
 <script>
   import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-
-  // import Modal from "../containers/Modal.svelte";
-  // import { app } from "../stores/app";
   import { redirect } from "@roxi/routify";
 
   const fbAuth = getAuth();
@@ -52,15 +49,14 @@
       />
       <a href="/" class="password__">Password forgotten? Choose New!</a>
     </div>
-  </form>
-  <div class="btn-contianer">
     <button
       on:click={handleSubmit}
       type="submit"
-      class="button is-rounded is-primary"
+      class="button is-rounded is-primary btn"
       >Log In
     </button>
-  </div>
+
+  </form>
   <div class="para-contianer">
     <p class="para__title">Password forgotten?</p>
     <span class="line">|</span>
@@ -92,7 +88,7 @@
     }
   }
   .form {
-    padding: 2rem 1.5rem;
+    padding: 2rem  1.5rem 0 1.5rem;
   }
   .title-cont {
     align-items: center;
@@ -125,9 +121,12 @@
     margin-top: 1.8rem;
     padding: 10px calc(calc(0.75em - 2px) + 0.375em);
   }
-  .btn-contianer,
+  .button,
   .para-contianer {
     padding: 1rem 1.5rem;
+  }
+  .btn {
+    margin-top: 1rem;
   }
   .para-contianer {
     display: flex;

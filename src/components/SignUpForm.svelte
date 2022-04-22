@@ -115,9 +115,9 @@
     // Jetzt kann ich auf jeder Page und in jedem Komponent testen, ob der User
     // eingeloggt ist oder nicht:
 
-    // Dieser Schritt ist nicht nötig, weil: 
-    // Wenn ( $app.user) erscheint der {fullUserName} , 
-    // UND wen nicht erscheinen die Buttons Signup & Log In 
+    // Dieser Schritt ist nicht nötig, weil:
+    // Wenn ( $app.user) erscheint der {fullUserName} ,
+    // UND wen nicht erscheinen die Buttons Signup & Log In
     // if( $app.user)
     //    // User ist eingeloggt
     // else
@@ -129,7 +129,6 @@
   <form on:submit={handleSubmit} class="form">
     <h1 class="title-cont is-medium">BOOM | Sing Up</h1>
     <div class="form-container">
-      <!-- <div class="input-wrapp"> </div> -->
       <label for="name">Full Name</label>
       <input
         required
@@ -138,9 +137,7 @@
         class="input is-rounded"
         placeholder="Your Full Name"
       />
-      <!-- {#if !isValid }    -->
       <p class="error">{errors.fullName}</p>
-      <!-- {/if} -->
       <label for="email">E-Mail</label>
       <input
         required
@@ -161,27 +158,25 @@
       />
       <p class="error">{errors.passWord}</p>
     </div>
+    <div class="btn-contianer">
+      {#if !isValid}
+        <button
+          on:click={handelValidation}
+          type="submit"
+          class="button is-rounded is-primary check">Check Entries</button
+        >
+      {:else}
+        <button
+          on:click={handleSubmit}
+          type="submit"
+          class="button is-rounded is-primary sign-up">Sign Up</button
+        >
+      {/if}
+    </div>
+    <div class="para-contianer">
+      <a href="/login" class="para__title">Already have an Account?</a>
+    </div>
   </form>
-  <div class="btn-contianer">
-    {#if !isValid}
-      <button
-        on:click={handelValidation}
-        type="submit"
-        class="button is-rounded is-primary check">Check Entries</button
-      >
-    {:else}
-      <button
-        on:click={handleSubmit}
-        type="submit"
-        class="button is-rounded is-primary sign-up">Sign Up</button
-      >
-    {/if}
-
-    <!-- isTrue ? disabled : enabled  -->
-  </div>
-  <div class="para-contianer">
-    <a href="/login" class="para__title">Already have an Account?</a>
-  </div>
 </div>
 
 <style>
@@ -264,16 +259,14 @@
   .input {
     border: none !important;
   }
-  .btn-contianer,
-  .para-contianer {
-    padding: 1rem 1.5rem;
+  .btn-contianer {
+    margin-top: 1.5rem;
   }
   .para-contianer {
     max-width: fit-content;
     text-align: end;
     float: right;
     width: 250px;
-    /* margin-left: 17rem; */
   }
   .para__title {
     color: rgb(77, 75, 75);
