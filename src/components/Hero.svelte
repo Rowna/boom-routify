@@ -31,9 +31,7 @@
     </p>
 
     <!-- Button -->
-    <button class="button is-primary">
-      <a class="btn" href="/catalog">Let's shop</a>
-    </button>
+      <a class="button is-primary" href="/catalog">Let's shop</a>
   </div>
 </div>
 
@@ -131,7 +129,4 @@
     border-radius: 10px;
   }
 
-  .btn {
-    color: rgb(242, 242, 242);
-  }
 </style>
