@@ -1,9 +1,7 @@
 <script>
-  // import Modal from "../containers/Modal.svelte";
   import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
   import { doc, setDoc, getFirestore } from "firebase/firestore";
   import { redirect } from "@roxi/routify";
-  import { app } from "../stores/app";
 
   // get a connector to firebase Auth
   const fbAuth = getAuth();
@@ -36,7 +34,8 @@
   }
 
   // Form-Validierung
-  function handelValidation() {
+  function handelValidation(e) {
+    e.preventDefault();
     let nameIsValid = false;
     let mailIsValid = false;
     let passwordIsValid = false;
@@ -75,7 +74,6 @@
     //        user-ID drinstehen, und zwer in einem Objekt, das "user" heisst.
     //    <<< firebase schickt den Token zurueck an die App.
 
-    // geht raus an Firebase im Internet oder im Emulator!
     createUserWithEmailAndPassword(
       fbAuth,
       userInput.emailInput,
@@ -87,7 +85,9 @@
         // bei jeder Datenbankabfrage an firebase zurueckgeschickt wird.
         // Damit hat Firebase automatisch alle Daten, die es braucht, um zu entscheiden,
         // ob der User Zugriff auf Datenbankdaten hat oder nicht.
+        console.log("Registrierung scheinbar erfolgreich!");
         fbUser = fbCredentials.user;
+        console.log("Aktuelle UserID: " + fbUser.uid);
         // app.set({ user: fbUser });
 
         // wenn ich das user-objekt von firebase erhalten habe, muss ich ausserdem noch
@@ -126,8 +126,8 @@
 </script>
 
 <div class="base-container">
-  <form on:submit={handleSubmit} class="form">
-    <h1 class="title-cont is-medium">BOOM | Sing Up</h1>
+  <div on:submit|preventDefault={handleSubmit} class="form">
+    <h1 class="title-cont is-medium">BOOM | Sign Up</h1>
     <div class="form-container">
       <label for="name">Full Name</label>
       <input
@@ -158,25 +158,24 @@
       />
       <p class="error">{errors.passWord}</p>
     </div>
-    <div class="btn-contianer">
-      {#if !isValid}
-        <button
-          on:click={handelValidation}
-          type="submit"
-          class="button is-rounded is-primary check">Check Entries</button
-        >
-      {:else}
-        <button
-          on:click={handleSubmit}
-          type="submit"
-          class="button is-rounded is-primary sign-up">Sign Up</button
-        >
-      {/if}
-    </div>
+  </div>
+  <div class="btn-contianer">
+    {#if !isValid}
+      <button
+        on:click|preventDefault={handelValidation}
+        class="button is-rounded is-primary check">Check Entries</button
+      >
+    {:else}
+      <button
+        on:click|preventDefault={handleSubmit}
+        class="button is-rounded is-primary sign-up">Sign Up</button
+      >
+    {/if}
+
     <div class="para-contianer">
       <a href="/login" class="para__title">Already have an Account?</a>
     </div>
-  </form>
+  </div>
 </div>
 
 <style>
@@ -260,7 +259,8 @@
     border: none !important;
   }
   .btn-contianer {
-    margin-top: 1.5rem;
+    /* margin-top: 1.5rem; */
+    padding: 0 1.5rem 10px 1.5rem;
   }
   .para-contianer {
     max-width: fit-content;

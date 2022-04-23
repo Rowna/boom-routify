@@ -1,9 +1,5 @@
 .firebase.json
 .history
 .routify
-.ui-debug.log
 dist
-fbEmulator-data/
-firebase-debug.log
-firestore-debug.log
 node_modules/

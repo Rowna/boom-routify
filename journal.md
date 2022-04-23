@@ -23,6 +23,51 @@ Die Tagesbilanz ist nicht dazu da, sich vor dem "inneren Chef" für die geleiste
 
 ## Das Journal 
 
+### 2022-04-22 17:38
+
+#### Wie man Daten aus den emulatoren exportiert
+
+1. Sicherstellen, dass die Emulatoren gerade laufen. Lässt sich mit einem Blick in den Browser prüfen. Ruhig noch einmal Reloaden, um sicher zu gehen.
+2. in einer __NEUEN__ Shell auf der Root-Ebene des Projekts folgenden Befehl ausführen:
+
+```powershell
+ > firestore emulators:export "./fbEmulator-data"
+```
+
+Jetzt nur noch abwarten, bis firestore diesen Job beendet hat.
+
+
+### 2022-04-22 17:16
+
+Habe heute "auf die harte Tour" gelernt, dass man Server nur dann
+starten darf, wenn ganz sicher ist, dass sie nicht laufen.
+
+Ich habe offenbar den firebase-Emulator zwei Mal gestartet. Die
+Folge war, dass es für alle Emulatoren nun zwei Server gab, und beide
+haben auf denselben Port zugegriffen. Damit haben sie sich gegenseitig
+blockiert, und nix ging mehr. In meinem Fall gab es jetzt ZWEI Auth-
+Emulatoren, die beide auf Port 8888 zugreifen wollten und sich 
+gegenseitig blockiert haben.
+
+Wie macht man es in Zukunft richtig?
+
+1. Man benutzt nur __EINE__ shell für ein und denselben Server. Immer dieselbe.
+2. Man startet den firebase-Server wie folgt:
+
+```powershell
+ > firebase emulators:start --import="./fbEmulator-data"
+```
+
+3. Wenn es nötig ist, den Server neu zu starten, bricht man in der aktuellen Firebase-Shell, also da wo die Server laufen, den aktuellen Prozess __IMMER__ mit `CTRL-C` ab! Das bewirkt, dass alle Emulatoren sich selber abschalten. Man kann überprüfen, ob noch irgendwelche Emulator-Server laufen. Dafür reicht folgender Aufruf im Browser:
+
+```
+ http://localhost:4000/emulators
+```
+
+Wenn diese Seite nicht zu erreichen ist, sind alle emulatoren abgeschaltet.
+
+4. Jetzt können die Firebase-Emulatoren problemlos neu gestartet werden (Punkt 2).
+
 ### 2022-04-19 11:00
 
 #### Todos

@@ -29,7 +29,7 @@
 
 <div class="base-container catalog-item card">
   <!-- on:submit|preventDefault={handleSubmit} -->
-  <form class="form">
+  <div class="form">
     <h1 class="title-cont is-medium">BOOM | Log In</h1>
     <div class="form-container">
       <label for="email">Your E-Mail</label>
@@ -49,18 +49,17 @@
       />
       <a href="/" class="password__">Password forgotten? Choose New!</a>
     </div>
+
     <button
-      on:click={handleSubmit}
-      type="submit"
+      on:click|preventDefault={handleSubmit}
       class="button is-rounded is-primary btn"
       >Log In
     </button>
-
-  </form>
-  <div class="para-contianer">
-    <p class="para__title">Password forgotten?</p>
-    <span class="line">|</span>
-    <a class="para__title __member" href="/signup">New Member?</a>
+    <div class="para-contianer">
+      <p class="para__title">Password forgotten?</p>
+      <span class="line">|</span>
+      <a class="para__title __member" href="/signup">New Member?</a>
+    </div>
   </div>
 </div>
 
@@ -88,7 +87,7 @@
     }
   }
   .form {
-    padding: 2rem  1.5rem 0 1.5rem;
+    padding: 2rem 1.5rem 0 1.5rem;
   }
   .title-cont {
     align-items: center;

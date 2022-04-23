@@ -8,6 +8,7 @@
     let showSignup;
     let showLogin;
     let unsubscribe;
+    
     unsubscribe = app.subscribe((app) => {
       showSignup = app.showSignup;
       showLogin = app.showLogin;

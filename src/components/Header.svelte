@@ -2,7 +2,6 @@
   import { redirect } from "@roxi/routify";
 
   import {
-    connectFirestoreEmulator,
     doc,
     getDoc,
     getFirestore,
@@ -11,15 +10,12 @@
   import {
     getAuth,
     onAuthStateChanged,
-    connectAuthEmulator,
   } from "firebase/auth";
 
   const db = getFirestore();
-  connectFirestoreEmulator(db, "localhost", 8888);
 
   const fbAuth = getAuth();
-  connectAuthEmulator(fbAuth, "http://localhost:8080");
-  let user = fbAuth.currentUser; // kommt im moment nirgendwo vor.
+  let user = fbAuth.currentUser; 
   let fullUserName = "";
   let logoutButton = false;
 
