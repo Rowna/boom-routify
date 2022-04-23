@@ -41,11 +41,13 @@
   function logoutHandler() {
     logoutButton = true;
     fbAuth
-      // ist ASYNCHRON, d.h. die noetigen anpassungen im
-      // .then vornehmen.
-      .signOut()
-      .then(() => {
-        user = fbAuth.currentUser;
+    // ist ASYNCHRON, d.h. die noetigen anpassungen im
+    // .then vornehmen.
+    .signOut()
+    .then(() => {
+      // location.reload();
+      window.location.href = window.location.href;
+      user = fbAuth.currentUser;
         console.log("Ausgeloggt!");
         $redirect("/");
       })

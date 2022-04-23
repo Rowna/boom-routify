@@ -1,17 +1,52 @@
 <script>
   import { getAuth } from "firebase/auth";
+  import {
+    arrayRemove,
+    arrayUnion,
+    collection,
+    doc,
+    getFirestore,
+    updateDoc,
+  } from "firebase/firestore";
+
+  const fbAuth = getAuth();
+  const db = getFirestore();
 
   export let article = {};
-  const fbAuth = getAuth();
+  let docs = [];
+
   let user = fbAuth.currentUser;
-
   let cartImage = "shopping-cart";
+  const fbArticles = collection(db, "articles");
 
-  function addToCartHandler() {
-    console.log("added to Shop!");
+  async function addToCartHandler() {
+    // Firestore-Pfad auf den richtigen Cart festlegen:
+    //     db ist svelte-bulma-Firestore (vgl. z.13)
+    //     users ist die collection, die wir brauchen
+    //     fbAuth.currentUser.uid ist die Dokument-ID, die wir brauchen
+    // Es ergibt sich also folgender Pfad "users/${fbAuth.currentUser.uid}"
+    const userRef = doc(db, "users", fbAuth.currentUser.uid);
+
+    // Update des Cart-Icons
     // wenn "filled" in cartImage tatsaechlich gefunden wird ...
-    if (cartImage.indexOf("filled") >= 0) cartImage = "shopping-cart";
-    else cartImage = "shopping-cart-filled";
+    if (cartImage.indexOf("filled") >= 0) {
+      // eine article.id aus dem "cart"-Array entfernen
+      await updateDoc(userRef, {
+        cart: arrayRemove(article.id),
+      });
+      // Cart-Icon updaten
+      cartImage = "shopping-cart";
+      console.log("Removed from Shop!");
+      // cart-image sieht "leer" aus
+    } else {
+      // eine neue article.id in das "cart"-Array einfuegen
+      await updateDoc(userRef, {
+        cart: arrayUnion(article.id),
+      });
+      // Cart-Icon updaten
+      cartImage = "shopping-cart-filled";
+      console.log("added to Shop!");
+    }
   }
 
   function addToFavoritesHandler() {
@@ -28,18 +63,22 @@
 
     <footer class="card-footer">
       {#if user !== null}
-        <p class="card-footer-item">
-          <!-- svelte-ignore a11y-missing-attribute -->
-          <a class="cart-img" on:click={addToCartHandler}>
-            <img src="../public/images/{cartImage}.png" alt="shopping-cart" />
-          </a>
-        </p>
-        <p class="card-footer-item">
-          <!-- svelte-ignore a11y-missing-attribute -->
-          <a class="fav-img" on:click={addToFavoritesHandler}>
-            <img src="../public/images/herz-ohne.png" alt="fav-img" />
-          </a>
-        </p>
+        <!-- svelte-ignore a11y-missing-attribute -->
+        <a class="card-footer-item" on:click={() => addToCartHandler()}>
+          <img
+            class="cart-img"
+            src="../public/images/{cartImage}.png"
+            alt="shopping-cart"
+          />
+        </a>
+        <!-- svelte-ignore a11y-missing-attribute -->
+        <a class="card-footer-item" on:click={addToFavoritesHandler}>
+          <img
+            class=" fav-img"
+            src="../public/images/herz-ohne.png"
+            alt="fav-img"
+          />
+        </a>
       {:else}
         <div class="card-foot container">You should log in!</div>
       {/if}
@@ -76,7 +115,8 @@
   }
   .cart-img,
   .fav-img {
-    max-width: 40px;
+    max-width: 40%;
+    margin: auto;
   }
   .cart-img,
   .fav-img:hover {
@@ -84,12 +124,10 @@
   }
   .card-footer {
     background-color: rgb(255, 255, 255);
-    position: absolute;
-    bottom: 0;
-    width: 100%;
     border-bottom: #e7e7e7 solid 0.2px;
-    border-radius: 0;
-    border-top: 0;
+    bottom: 0;
+    justify-content: center;
+    position: absolute;
   }
   .card-foot {
     text-align: center;

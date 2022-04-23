@@ -1,5 +1,4 @@
 <script>
-  import { app } from "../stores/app";
   import CatalogItem from "../components/CatalogItem.svelte";
   import { getAuth } from "firebase/auth";
 
