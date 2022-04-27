@@ -81,3 +81,12 @@ Gegeben, der User ist eingeloggt: \
 Wenn der User auf den "Add-to-cart"-button klickt, \
 DANN müsse d
 
+
+
+### 2022-04-19 11:00
+
+
+Beim Klicken "add-to-cart"-Button -->
+    if (das ID-geklickte Artikle (aricle.id) === das ID-schon vorhandenes Artikel im Firestore ()){
+        dann push bzw. add to Cart.svelte
+    }

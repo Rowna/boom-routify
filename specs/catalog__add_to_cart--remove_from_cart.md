@@ -1,10 +1,11 @@
 
 ## Einen neuen Artikel zum Cart hinzufuegen
 
-1. Der Nutzer drückt auf den "Add-to-cart" button
+1. Der Nutzer drückt auf den "Add-to-cart" button im "Catalog"
 2. Im Event-listener
-   1. Die benötigten Artikel-Daten aus dem Firestore holen: Das ist die Artikel-ID (womoeglich habe ich die schon, wenn ich die /catalog-page erstelle! bitte nachschauen!)
-   2. in `users/\${$app.user.uid}/cart` die Artikel-ID an den Cart-Array anfügen.
+   1. Die benötigten Artikel-Daten aus dem Firestore holen: Das ist das komplette Artikel-Dokument (`getDoc()`), nicht nur seine ID. Also das komplette Artikel-Objekt bzw. nur die fields, die fuer den Cart gebraucht werden. Dazu gehoert auch die ID. 
+      1. Wir bauen dazu im Event-Handler ein neues Cart-Objekt, in dem wir nur die fields ablegen, die nachher wirklich im Cart gebraucht werden.
+   2. in `doc(db, "users", user.uid, "cart")` wird nun das komplette Cart-Artikel-Objekt angefügt.
    3. Das Outline-Cart-Icon durch ein "filled"-Icon austauschen.
 
 

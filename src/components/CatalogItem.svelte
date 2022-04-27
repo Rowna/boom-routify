@@ -1,5 +1,7 @@
 <script>
   import { getAuth } from "firebase/auth";
+  import { onDestroy } from "svelte";
+
   import {
     arrayRemove,
     arrayUnion,
@@ -11,13 +13,17 @@
 
   const fbAuth = getAuth();
   const db = getFirestore();
-
+  
+  // "export let" bedeutet: Diese Variable ist ein "Prop".
+  // Das leere Objekt ist der default-Wert, D.H. Wenn nix ankommt, 
+  // wird mit "article" als leerem Objekt gearbeitet. 
+  // "article" wird im Parent-Component "<Catalog>" deklariert
+  // und mit Daten gefüllt, und das Child-Component "<CatalogItem>" 
+  // WARTET auf ein Prop mit dem Namen "article". 
   export let article = {};
-  let docs = [];
 
   let user = fbAuth.currentUser;
   let cartImage = "shopping-cart";
-  const fbArticles = collection(db, "articles");
 
   async function addToCartHandler() {
     // Firestore-Pfad auf den richtigen Cart festlegen:
@@ -26,6 +32,7 @@
     //     fbAuth.currentUser.uid ist die Dokument-ID, die wir brauchen
     // Es ergibt sich also folgender Pfad "users/${fbAuth.currentUser.uid}"
     const userRef = doc(db, "users", fbAuth.currentUser.uid);
+    // console.log(userRef);
 
     // Update des Cart-Icons
     // wenn "filled" in cartImage tatsaechlich gefunden wird ...

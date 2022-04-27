@@ -5,21 +5,20 @@
   import { app } from "../stores/app";
 
   /* */
-    let showSignup;
-    let showLogin;
-    let unsubscribe;
-    
-    unsubscribe = app.subscribe((app) => {
-      showSignup = app.showSignup;
-      showLogin = app.showLogin;
-    });
-      // onDestroy(unsubscribe);
-      onDestroy(() => {
-        if (unsubscribe) {
-          unsubscribe();
-        }
-      });
-      
+  let showSignup;
+  let showLogin;
+  let unsubscribe;
+
+  unsubscribe = app.subscribe((app) => {
+    showSignup = app.showSignup;
+    showLogin = app.showLogin;
+  });
+  // onDestroy(unsubscribe);
+  onDestroy(() => {
+    if (unsubscribe) {
+      unsubscribe();
+    }
+  });
 </script>
 
 <!-- <div class="landingpage__container"> -->
@@ -31,7 +30,7 @@
     {#if showLogin}
       <LoginForm />
     {/if }
-  --> 
+  -->
 <div>
   <Hero />
 </div>
