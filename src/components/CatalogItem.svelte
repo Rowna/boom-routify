@@ -6,6 +6,7 @@
     arrayRemove,
     arrayUnion,
     collection,
+    deleteField,
     doc,
     getFirestore,
     updateDoc,
@@ -13,13 +14,13 @@
 
   const fbAuth = getAuth();
   const db = getFirestore();
-  
+
   // "export let" bedeutet: Diese Variable ist ein "Prop".
-  // Das leere Objekt ist der default-Wert, D.H. Wenn nix ankommt, 
-  // wird mit "article" als leerem Objekt gearbeitet. 
+  // Das leere Objekt ist der default-Wert, D.H. Wenn nix ankommt,
+  // wird mit "article" als leerem Objekt gearbeitet.
   // "article" wird im Parent-Component "<Catalog>" deklariert
-  // und mit Daten gefüllt, und das Child-Component "<CatalogItem>" 
-  // WARTET auf ein Prop mit dem Namen "article". 
+  // und mit Daten gefüllt, und das Child-Component "<CatalogItem>"
+  // WARTET auf ein Prop mit dem Namen "article".
   export let article = {};
 
   let user = fbAuth.currentUser;
@@ -36,20 +37,34 @@
 
     // Update des Cart-Icons
     // wenn "filled" in cartImage tatsaechlich gefunden wird ...
+    /*
+    // ein neues Cart-Artikel-Objekt anlegen:
+    */
+    let cartItem = {
+      id: article.id,
+      title: article.title,
+      desc: article.desc,
+      price: article.price,
+      img: article.img,
+    };
+    
     if (cartImage.indexOf("filled") >= 0) {
       // eine article.id aus dem "cart"-Array entfernen
+      // const articleRef = doc(db, "users", "cart");
+      // arrayRemove((articleRef), where(article.id, "=", ""))
       await updateDoc(userRef, {
-        cart: arrayRemove(article.id),
+        // cart: deleteField(),
+        cart: arrayRemove(cartItem),
       });
       // Cart-Icon updaten
       cartImage = "shopping-cart";
       console.log("Removed from Shop!");
       // cart-image sieht "leer" aus
     } else {
-      // eine neue article.id in das "cart"-Array einfuegen
       await updateDoc(userRef, {
-        cart: arrayUnion(article.id),
+        cart: arrayUnion(cartItem),
       });
+
       // Cart-Icon updaten
       cartImage = "shopping-cart-filled";
       console.log("added to Shop!");

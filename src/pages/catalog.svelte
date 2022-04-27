@@ -9,14 +9,13 @@
   const fbAuth = getAuth();
   const user = fbAuth.currentUser;
 
+  let docs = [];
 
   if (user !== null) {
     console.log(`Habe die Email ${user.email}`);
   } else {
     console.log("Bin gerade nicht eingeloggt.");
   }
-
-  let docs = [];
 
   // Connector zur "articles"-Collecion erstellen mit Hilfe des
   // firestore-connectors in $app
@@ -40,6 +39,7 @@
     .catch((error) => console.error(error));
 </script>
 
+<!-- Notification zur Info wenn der User sich ausloggt wird rot bzw. einloggt wird orang -->
 {#if user !== null}
   <div class="notification is-warning">
     <p>Bin eingeloggt als {user.email}</p>
@@ -58,6 +58,15 @@
 
   <div class="catalog-container">
     {#each docs as article (article.id)}
+    <!-- 
+      { article } ist als Prop für das <CatalogItem>-Component definier 
+      um es in <CatalogItem> benutzen zu können, muss in <CatalogItem> 
+      folgende Zeile stehen:
+      export let article;   
+
+      WICHTIG: Der Name des Props muss im <Catalog> und im <CatalogItem>
+      absolute gleich sein!! Sonst kommen die Daten im <CatalogItem> nicht an.
+    -->
       <CatalogItem {article} />
     {/each}
   </div>
