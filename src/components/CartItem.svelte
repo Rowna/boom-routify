@@ -1,6 +1,41 @@
 <script>
+  import {
+    getFirestore,
+    arrayRemove,
+    doc,
+    updateDoc,
+  } from "firebase/firestore";
+  import { getAuth } from "firebase/auth";
+
+  const db = getFirestore();
+  const fbAuth = getAuth();
+  
+  // Wichtig, um zu wissen ob der User null ist!
+  let user = fbAuth.currentUser;
+  if (user !== null) {
+    console.log(`Habe die Email ${user.email}`);
+  } else {
+    console.log("Bin gerade nicht eingeloggt.");
+  }
+  
   export let article;
-  export const promise = null;
+  export let promise;
+  
+  const userRef = doc(db, "users", fbAuth.currentUser.uid);
+  let cartItem = {
+    id: article.id,
+    title: article.title,
+    desc: article.desc,
+    price: article.price,
+    img: article.img,
+  };
+
+  function removeArtikelHandler() {
+    console.log("Article Removed!");
+    updateDoc(userRef, {
+      cart: arrayRemove(cartItem),
+    });
+  }
 </script>
 
 <div class="box card">
@@ -27,9 +62,14 @@
     </div>
   </div>
   <div class="card-footer">
-    <p class="button card-footer-item article-delete is-dark">
+    <!-- svelte-ignore a11y-missing-attribute -->
+    <a
+      href="/catalog"
+      on:click={removeArtikelHandler}
+      class="button card-footer-item article-delete is-dark"
+    >
       Remove this Article
-    </p>
+    </a>
   </div>
 </div>
 
