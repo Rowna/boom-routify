@@ -1,5 +1,7 @@
 <script>
   import { getAuth } from "firebase/auth";
+  import singleView from "../pages/singleView.svelte";
+
   import { onDestroy } from "svelte";
 
   import {
@@ -45,7 +47,7 @@
       price: article.price,
       img: article.img,
     };
-    
+
     if (cartImage.indexOf("filled") >= 0) {
       // eine article.id aus dem "cart"-Array entfernen
       // const articleRef = doc(db, "users", "cart");
@@ -77,8 +79,16 @@
 <div class="catalog-items card">
   <div class="card-image">
     <figure class="image">
-      <!-- svelte-ignore a11y-img-redundant-alt -->
-      <img class="img" src="images/{article.img}" alt="article image" />
+      <!-- svelte-ignore a11y-missing-content -->
+      <!-- cartSingle: ist das Einzelansicht für Recommendationssystem -->
+      <a class="cartSingle" href="/singleView">
+        <!-- svelte-ignore a11y-img-redundant-alt -->
+        <img
+          class="cartSingle img"
+          src="images/{article.img}"
+          alt="article image"
+        />
+      </a>
     </figure>
 
     <footer class="card-footer">
@@ -118,6 +128,12 @@
 </div>
 
 <style>
+  .cartSingle {
+    background-color: #2faa22;
+  }
+  .cartSingle:hover {
+    cursor: pointer;
+  }
   .image {
     position: relative;
   }
@@ -148,8 +164,10 @@
     bottom: 0;
     justify-content: center;
     position: absolute;
+    width: 100%;
   }
   .card-foot {
+    width: 100%;
     text-align: center;
     padding: 10px;
     color: rgb(248, 77, 77);
