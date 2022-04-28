@@ -58,8 +58,8 @@
 
   <div class="catalog-container">
     {#each docs as article (article.id)}
-    <!-- 
-      { article } ist als Prop für das <CatalogItem>-Component definier 
+      <!-- 
+      { article } ist als Prop für das <CatalogItem>-Component definiert, 
       um es in <CatalogItem> benutzen zu können, muss in <CatalogItem> 
       folgende Zeile stehen:
       export let article;   
@@ -77,15 +77,15 @@
     margin: 1.2rem 1.2rem;
   }
   .catalog-title {
+    position: relative;
     font-family: "Sofia";
     font-size: 2.3rem;
     color: #000;
     text-align: center;
     display: grid;
-    position: relative;
+    justify-items: center;
 
     grid-template-rows: 1fr 2rem;
-    justify-items: center;
   }
   @media only screen and (min-width: 670px) {
     .catalog-title {

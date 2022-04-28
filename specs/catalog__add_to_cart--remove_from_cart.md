@@ -23,6 +23,7 @@ Unsere App interessiert sich nicht dafür, welche User einen bestimmten Artikel 
 
 Wenn der user sich einloggt, sollen schon beim Aufbau des Katalogs die Cart-Symbole gefüllt sein, wenn ein bestimmter Artikel bereits im Cart liegt! Er muss das wissen, damit er nicht aus versehen einen Cart-Artikel löscht, der eigentlich im Cart liegt!
 
+WEG --
 Das Update in die Datenbank sollte bei `onDestroy` gesammelt erfolgen, wenn diese Page verlassen wird. Sonst wird bei jedem kleinen Klick auf den Cart eine komplizierte Datenbankabfrage gestartet. Wenn einer nur mit den Buttons rumspielt, koennen da über 100 Datenbankabfragen entstehen!!!
 
 

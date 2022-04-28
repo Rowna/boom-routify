@@ -5,8 +5,6 @@
   import {
     arrayRemove,
     arrayUnion,
-    collection,
-    deleteField,
     doc,
     getFirestore,
     updateDoc,
@@ -76,7 +74,7 @@
   }
 </script>
 
-<div class="catalog-item card">
+<div class="catalog-items card">
   <div class="card-image">
     <figure class="image">
       <!-- svelte-ignore a11y-img-redundant-alt -->
