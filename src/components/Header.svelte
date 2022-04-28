@@ -48,8 +48,7 @@
       // location.reload();
       window.location.href = window.location.href;
       user = fbAuth.currentUser;
-        console.log("Ausgeloggt!");
-        $redirect("/");
+        // console.log("Ausgeloggt!");
       })
       .catch((error) => "Konnte nicht ausloggen: " + error.message);
   }

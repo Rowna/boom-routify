@@ -1,4 +1,6 @@
 <script>
+  import { redirect } from "@roxi/routify";
+
   import {
     getFirestore,
     doc,
@@ -8,7 +10,7 @@
   } from "firebase/firestore";
 
   import CartItem from "../components/CartItem.svelte";
-  import { getAuth } from "firebase/auth";
+  import { getAuth, onAuthStateChanged } from "firebase/auth";
 
   const db = getFirestore();
   const fbAuth = getAuth();
@@ -20,6 +22,14 @@
   } else {
     console.log("Bin gerade nicht eingeloggt.");
   }
+
+  // Wenn sich der Login-Status aendert ...
+  onAuthStateChanged(fbAuth, (fbUser) => {
+    // ... und der user ausgeloggt ist ...
+    if (!fbUser) {
+      $redirect("/catalog");
+    }
+  });
 
   /*
     SPEC:
@@ -51,13 +61,13 @@
   // Siehe "await Block" in der Svelte.dev Dokumentation
   let promise = getDoc(userDoc)
     .then((snapshot) => {
-      console.log(snapshot.data().cart);
+      // console.log(snapshot.data().cart);
       return snapshot.data().cart;
     })
     .catch((error) => console.error(error));
 
   // Die Cart leeren.
-  function clearCart() {
+  function clearCartHandler() {
     console.log("FieldRemove()");
     updateDoc(userRef, {
       cart: deleteField(),
@@ -65,34 +75,49 @@
   }
 </script>
 
+<!-- svelte-ignore missing-declaration -->
 <div class="cart">
   <div class="cart-title">
     <p>BOOM</p>
-    <p class="subtitle is-7">Discover Kids Gallery with Pics</p>
+    <p class="subtitle is-7">Pay with different methods</p>
   </div>
 
   <div class="cart-container">
     <!-- 'promise' ist hier das letzte Promise -->
     {#await promise}
-      <div class="box">
-        <p class="title is-4">... The Cart is waiting for your Articles!</p>
-      </div>
-
-      <!-- 'promise' ist hier die Payload im Promise -->
-    {:then promise}
+      <!-- 
+        'articles' ist hier die Payload im Promise;
+         wenn es keine cart-articles gibt, ist 'articles' === null.
+         das testet das {#if}
+      -->
+    {:then articles}
       <div class="articles-container">
-        {#each promise as article (article.id)}
-          <CartItem {article} />
-        {/each}
-        <div class="btns">
-          <a class="button is-success" href="/">Execute Order</a>
-          <a
-            class="button is-danger is-light"
-            on:click={clearCart}
-            href="/catalog">Delelte all Articles</a
-          >
-          <a class="button is-primary" href="/catalog">Back to Gallery</a>
-        </div>
+        {#if articles && articles.length > 0}
+          <!-- svelte-ignore empty-block -->
+          {#each articles as article (article.id)}
+            <CartItem {article} />
+          {/each}
+          <div class="btns">
+            <a class="button is-success" href="/">Execute Order</a>
+            <a
+              class="button is-danger is-light"
+              on:click={clearCartHandler}
+              href="/catalog">Delelte all Articles</a
+            >
+            <a class="button is-primary" href="/catalog">Back to Gallery</a>
+          </div>
+        {:else}
+          <div class="box">
+            <div>
+              <p class="title is-4">
+                ... The Cart is waiting for your Articles!
+              </p>
+            </div>
+            <div class="gallery-btn btns">
+              <a class="button is-primary" href="/catalog">Back to Gallery</a>
+            </div>
+          </div>
+        {/if}
       </div>
     {:catch error}
       <p style="color: red">{error.message}</p>
@@ -162,6 +187,9 @@
     .btns {
       margin-top: 4rem;
     }
+  }
+  .gallery-btn {
+    margin-top: 3rem;
   }
   .btns {
     display: flex;
