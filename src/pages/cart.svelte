@@ -23,6 +23,7 @@
     console.log("Bin gerade nicht eingeloggt.");
   }
 
+  
   // Wenn sich der Login-Status aendert ...
   onAuthStateChanged(fbAuth, (fbUser) => {
     // ... und der user ausgeloggt ist ...
@@ -30,6 +31,19 @@
       $redirect("/catalog");
     }
   });
+  
+  let subtotal = 0;
+  
+  function getSubTotal(articles) {
+    articles.forEach((el) => {
+      // ist ein article aus der datenbank
+      subtotal += el.price;
+    });
+  }
+
+  function getSubUpdate(amount) {
+    subtotal += amount;
+  }
 
   /*
     SPEC:
@@ -62,7 +76,18 @@
   let promise = getDoc(userDoc)
     .then((snapshot) => {
       // console.log(snapshot.data().cart);
-      return snapshot.data().cart;
+      const articles = snapshot.data().cart;
+      // berechnet das aktuelle Sub-Total
+      getSubTotal(articles)
+      // gibt die articles fuer {#await} zurueck.
+      return articles;
+
+      // genau. testen kommt auch spaeter. aber jetzt ist das hier soweit fertig.
+      // wir haben jetzt erstmal nur das subtotal, wenn nur ein einziges exemplar
+      // eines artikels im cart liegt.
+      // das ist ein kleiner fortschritt, aber er bringt uns weiter.
+      
+      // Guten Abo -- danke :)
     })
     .catch((error) => console.error(error));
 
@@ -95,8 +120,32 @@
         {#if articles && articles.length > 0}
           <!-- svelte-ignore empty-block -->
           {#each articles as article (article.id)}
-            <CartItem {article} />
+            <CartItem {article} {getSubUpdate} />
           {/each}
+
+          <!-- Total Preis -->
+          <div class="totals card">
+            <div class="card-footer">
+              <p class="card-footer-item title is-3 total">Subtotal:</p>
+              <p class="card-footer-item title is-5">{subtotal} €</p>
+            </div>
+
+            <div class="card-footer">
+              <p class="card-footer-item title is-4 is-small total">
+                Shipping Costs:
+              </p>
+              <p class="card-footer-item title is-6">0.00 €</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <br />
+            <div class="card-footer">
+              <p class="card-footer-item title is-4 total">Estimate Total:</p>
+              <p class="card-footer-item title is-4"><code>{subtotal} €</code></p>
+            </div>
+          </div>
+
           <div class="btns">
             <a class="button is-success" href="/">Execute Order</a>
             <a
@@ -126,6 +175,12 @@
 </div>
 
 <style>
+  .totals {
+    margin-bottom: 1rem;
+  }
+  .total {
+    margin-bottom: 0;
+  }
   .box {
     text-align: center;
   }

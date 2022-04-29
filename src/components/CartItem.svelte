@@ -9,7 +9,7 @@
 
   const db = getFirestore();
   const fbAuth = getAuth();
-  
+
   // Wichtig, um zu wissen ob der User null ist!
   let user = fbAuth.currentUser;
   if (user !== null) {
@@ -17,10 +17,13 @@
   } else {
     console.log("Bin gerade nicht eingeloggt.");
   }
-  
+
+  export let getSubUpdate = null;
   export let article;
-  export let promise;
-  
+  // export let promise;
+
+  let qty = 1;
+
   const userRef = doc(db, "users", fbAuth.currentUser.uid);
   let cartItem = {
     id: article.id,
@@ -29,6 +32,18 @@
     price: article.price,
     img: article.img,
   };
+
+  function increaseHandler() {
+    qty++;
+    getSubUpdate(article.price);
+  }
+
+  function decreaseHandler() {
+    if (qty > 1) {
+      qty--;
+      getSubUpdate(-article.price);
+    }
+  }
 
   function removeArtikelHandler() {
     console.log("Article Removed!");
@@ -44,7 +59,10 @@
     <div class="card-footer-item article-img">
       <!-- svelte-ignore a11y-missing-attribute -->
       <!-- svelte-ignore a11y-missing-content -->
-      <img class="imge" src="images/{article.img}" alt="article" />
+      <!-- svelte-ignore a11y-invalid-attribute -->
+      <a href="/singleView">
+        <img class="imge" src="images/{article.img}" alt="article" />
+      </a>
     </div>
 
     <!-- <p>title: {article.title}</p> -->
@@ -55,9 +73,16 @@
 
     <!-- <p>price: {article.price}</p> -->
     <div class="card-footer-item article-amount">
-      <p class="article-price subtitle is-5">{article.price} €</p>
+      <p class="article-price subtitle is-5">Preis: {article.price} €</p>
       <div class="card-header">
         <p class="article-qty card-header-title">Qty:</p>
+        <p class="article-qty card-header-title">{qty}</p>
+        <p class="article-qty card-header-title" on:click={decreaseHandler}>
+          -
+        </p>
+        <p class="article-qty card-header-title" on:click={increaseHandler}>
+          +
+        </p>
       </div>
     </div>
   </div>
@@ -73,7 +98,40 @@
   </div>
 </div>
 
+<!-- Total Preis -->
+
+<!--  
+<div class="totals card">
+  <div class="card-footer">
+    <p class="card-footer-item title is-3 total">Subtotal:</p>
+    <p class="card-footer-item title is-5">60.00 €</p>
+  </div>
+
+  <div class="card-footer">
+    <p class="card-footer-item title is-4 is-small total">
+      Shipping Costs:
+    </p>
+    <p class="card-footer-item title is-6">0.00 €</p>
+  </div>
+</div>
+
+<div class="card">
+  <br />
+  <div class="card-footer">
+    <p class="card-footer-item title is-4 total">Estimate Total:</p>
+    <p class="card-footer-item title is-4"><code>60.00 €</code></p>
+  </div>
+</div>
+-->
 <style>
+  /*  
+.totals {
+    margin-bottom: 1rem;
+  }
+  .total {
+    margin-bottom: 0;
+  }
+  */
   .imge {
     object-position: center;
     width: 120px;
