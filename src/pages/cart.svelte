@@ -23,7 +23,6 @@
     console.log("Bin gerade nicht eingeloggt.");
   }
 
-  
   // Wenn sich der Login-Status aendert ...
   onAuthStateChanged(fbAuth, (fbUser) => {
     // ... und der user ausgeloggt ist ...
@@ -31,18 +30,24 @@
       $redirect("/catalog");
     }
   });
-  
+
   let subtotal = 0;
-  
+
   function getSubTotal(articles) {
+    // Einzelpreise addieren, bevor ich ihre Summe zu subTotal addiere.
+    let artPrices = 0;
     articles.forEach((el) => {
       // ist ein article aus der datenbank
-      subtotal += el.price;
+      artPrices += el.price;
     });
+    subtotal = Math.round((subtotal + artPrices + Number.EPSILON) * 100) / 100;
   }
 
   function getSubUpdate(amount) {
-    subtotal += amount;
+    // Das Problem mit den Rundungsfehlern aufheben!
+    // ist die keinsmoeglich Double groesser als 1, also 1.00000
+    subtotal = Math.round((subtotal + amount + Number.EPSILON) * 100) / 100;
+    // subtotal += amount;
   }
 
   /*
@@ -78,7 +83,7 @@
       // console.log(snapshot.data().cart);
       const articles = snapshot.data().cart;
       // berechnet das aktuelle Sub-Total
-      getSubTotal(articles)
+      getSubTotal(articles);
       // gibt die articles fuer {#await} zurueck.
       return articles;
 
@@ -86,7 +91,7 @@
       // wir haben jetzt erstmal nur das subtotal, wenn nur ein einziges exemplar
       // eines artikels im cart liegt.
       // das ist ein kleiner fortschritt, aber er bringt uns weiter.
-      
+
       // Guten Abo -- danke :)
     })
     .catch((error) => console.error(error));
@@ -142,18 +147,24 @@
             <br />
             <div class="card-footer">
               <p class="card-footer-item title is-4 total">Estimate Total:</p>
-              <p class="card-footer-item title is-4"><code>{subtotal} €</code></p>
+              <p class="card-footer-item title is-4">
+                <code>{subtotal} €</code>
+              </p>
             </div>
           </div>
 
-          <div class="btns">
-            <a class="button is-success" href="/">Execute Order</a>
-            <a
-              class="button is-danger is-light"
-              on:click={clearCartHandler}
-              href="/catalog">Delelte all Articles</a
-            >
-            <a class="button is-primary" href="/catalog">Back to Gallery</a>
+          <div class="box btns-container">
+            <div class="btns">
+              <a class="button is-primary pay-btn" href="/">Execute Order</a>
+              <a
+                class="button is-danger is-light delete-btn"
+                on:click={clearCartHandler}
+                href="/catalog">Delelte all Articles</a
+              >
+              <a class="button gallery-btn is-primary" href="/catalog"
+                >Back to Gallery</a
+              >
+            </div>
           </div>
         {:else}
           <div class="box">
@@ -239,31 +250,35 @@
       text-align: center;
       max-width: 1000px;
     }
-    .btns {
-      margin-top: 4rem;
-    }
   }
   .gallery-btn {
     margin-top: 3rem;
+  }
+  .btns-container {
+    margin-top: 2rem;
   }
   .btns {
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
-  .is-primary,
-  .is-success,
-  .is-danger {
+  .gallery-btn,
+  .pay-btn,
+  .delete-btn {
     font-size: 1.3rem;
     margin: 5rem 0 1rem 0;
     border-radius: 10px;
     margin-top: 0;
   }
-  .is-danger {
+  .pay-btn {
+    margin-top: 1rem;
+    background-color: #6acc6a;
+  }
+  .delete-btn {
     color: rgb(134, 131, 131) !important;
     border: solid 1px rgb(199, 197, 197);
   }
-  .is-primary {
+  .gallery-btn {
     background-color: #df485b;
   }
 </style>
