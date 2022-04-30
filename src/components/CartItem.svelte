@@ -57,8 +57,8 @@
   <div class="card-footer cart-items">
     <!-- <h2>Art-Nr: {article.id}</h2> -->
     <div class="card-footer-item article-img">
-      <a href="/singleView">
-        <!-- => <a href="/singleView/{article.id}"> -->
+      <!-- => <a href="/singleView/{article.id}"> -->
+      <a href="/singleView/{article.id}">
         <img class="imge" src="images/{article.img}" alt="article" />
       </a>
     </div>
@@ -80,7 +80,7 @@
           Preis:
           <!-- svelte-ignore a11y-missing-attribute -->
           <!-- svelte-ignore a11y-missing-content -->
-          <a class="subtitle card-header-title is-5 is-light price-a">
+          <a class="subtitle card-header-title is-5 price-a">
             {article.price} €
           </a>
         </p>
@@ -173,5 +173,8 @@
   }
   .qty-a {
     text-decoration: none;
+  }
+  .price-a {
+    color: rgb(130, 152, 145);
   }
 </style>

@@ -1,6 +1,6 @@
 <script>
   import { getAuth } from "firebase/auth";
-  import singleView from "../pages/singleView.svelte";
+  import singleView from "../pages/singleView/[artID].svelte";
 
   import { onDestroy } from "svelte";
 
@@ -81,7 +81,7 @@
     <figure class="image">
       <!-- svelte-ignore a11y-missing-content -->
       <!-- cartSingle: ist das Einzelansicht für Recommendationssystem -->
-      <a class="cartSingle" href="/singleView">
+      <a class="cartSingle" href="/singleView/{article.id}">
         <!-- svelte-ignore a11y-img-redundant-alt -->
         <img
           class="cartSingle img"

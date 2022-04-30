@@ -1,6 +1,7 @@
 <script>
   import { getAuth } from "firebase/auth";
   import { doc, getFirestore } from "firebase/firestore";
+  import { params } from "@roxi/routify";
 
   const db = getFirestore();
   const fbAuth = getAuth();
@@ -9,7 +10,7 @@
   /*  
   Spec: 
   User-Id ist user.uid: Das wird gebraucht, wenn eine neue Rec-Abfrage abgeschickt wird
-  articleID: brauchen wir, damit die neue Rec. beim richtigen Artiekl eingetragen wird.#
+  articleID: brauchen wir, damit die neue Rec. beim richtigen Artiekl eingetragen wird.
     sie steht als Endpoint in der URL, die uns auf diese Seite gefuehrt hat:
        http://localhost:5000/singleView/54812nfqi8291
     die 54812nfqi8291 ist die artikel-ID, die wir auch in der 'articles'-collection finden.
@@ -18,7 +19,7 @@
 
   für die Einzelansicht: braucht man das richtige getDoc(articleRef).then().catch();
                 // 
-  articleRef = doc(db, "articles", articleID);
+  articleRef = doc(db, "articles", $params.artID);
   getDoc(articleRef)
     .then((docsnap) => {
       if(docsnap.exists())
@@ -35,7 +36,6 @@
   Wenn wir den Artikel haben, haben wir auch alle existierenden Recs!
   
  */
-
   // articleRef = doc();
 </script>
 
@@ -43,6 +43,8 @@
   <p>BOOM</p>
   <p class="subtitle is-7">Rate your article and read more about it!</p>
 </div>
+<!-- <h1>Die Artikelnummer für diesen Artikle ist: {$params.artID}</h1> -->
+
 <!-- <p class="title">Hello from the Einzelansicht :)</p> -->
 
 <!-- <div class="box"> -->
@@ -52,7 +54,7 @@
       <!-- Das Image mit den Bewertungssternen -->
       <div class="card-footer-item img-container">
         <div>
-          <img class="img" src="images/12.jpeg" alt="Bild" />
+          <img class="img" src="/images/12.jpeg" alt="Bild" />
         </div>
         <!-- 
           Hier kommt die Durchschnitts-Bewertung aller 
