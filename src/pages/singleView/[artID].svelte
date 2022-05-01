@@ -2,12 +2,13 @@
   import { getAuth } from "firebase/auth";
   import { doc, getFirestore, getDoc } from "firebase/firestore";
   import { params } from "@roxi/routify";
-  import Modal from "../../containers/Modal.svelte"
- 
+  import Modal from "../../containers/Modal.svelte";
+  import Stars from "../../containers/Stars.svelte";
+
   const db = getFirestore();
   const fbAuth = getAuth();
   let user = fbAuth.currentUser;
-  
+
   // Modal ist nicht zu sehen
   let modalVisible = false;
 
@@ -66,6 +67,11 @@
     .catch((error) => {
       console.log("So eine Scheisse! " + error.message);
     });
+
+
+
+
+
 </script>
 
 <div class="cart-title">
@@ -93,8 +99,17 @@
           Gibt es noch keine Recommendations für diesen Artikel, 
           beleiben alle Sterne leer.
         -->
-        <div class="sterne">Hier kommen die Sterne!</div>
+        <div class="card-footer-item sterne">
+          <Stars />
+        </div>
       </div>
+
+      <!-- Hier kommt das Modal -->
+      {#if modalVisible}
+        <Modal />
+      {/if}
+      <br class="line">
+
 
       <!-- Die Beschreibung des Artikels -->
       <div class="card-footer-item desc-container">
@@ -103,23 +118,20 @@
           <p class="article-price subtitle is-5">{article.price} €</p>
           <p class="article-desc subtitle is-6">{article.desc}</p>
         </div>
-        <!-- Das ist das Modal für Rating -->
-        <p class="rate-btn-container" on:click={ratingHandler}>
-          <!-- svelte-ignore a11y-missing-attribute -->
-          <a class="button is-info rate-btn">Rate this Article</a>
-        </p>
 
-        <!-- Hier kommt das Modal -->
+        <div class="btns card">
+          <!-- Das ist das Modal für Rating -->
+          <p class="rate-btn-container card-content">
+            <!-- svelte-ignore a11y-missing-attribute -->
+            <a class="button is-info rate-btn" on:click={ratingHandler}>Write your Recension</a>
+          </p>
 
-        <!--   -->
-        {#if modalVisible}
-        <Modal />
-        {/if}
-
-        <!-- Button für "Back to Gallery" -->
-        <p class="rate-btn-container">
-          <a class="button is-info gly-btn" href="/catalog">Back to Gallery</a>
-        </p>
+          <!-- Button für "Back to Gallery" -->
+          <p class="rate-btn-container card-content">
+            <a class="button is-info gly-btn" href="/catalog">Back to Gallery</a
+            >
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -163,6 +175,12 @@
 
 <!-- </div> -->
 <style>
+  .btns {
+    width: 100%;
+    margin-top: 1rem;
+    /* padding: 3rem 0 1rem 0 */
+  }
+
   /* min heißt ab 1024 px */
   @media only screen and (min-width: 1024px) {
     .base-container {
@@ -197,12 +215,15 @@
     .kunden-container {
       flex-direction: column;
     }
-    .desc-container {
+    /* .desc-container {
       margin: 0 15% 0 15%;
-    }
+    } */
     .img {
       width: 300px;
       height: 300px;
+    }
+    .img-container {
+      border-bottom: solid 2px #f5f5efc4;
     }
   }
   .cart-title {
@@ -221,7 +242,7 @@
   .desc-container {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    /* gap: 2rem; */
   }
 
   .img {

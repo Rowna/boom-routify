@@ -54,7 +54,7 @@
 </script>
 
 <div class="box card">
-  <div class="card-footer cart-items">
+  <div class="card-footer card-items">
     <!-- <h2>Art-Nr: {article.id}</h2> -->
     <div class="card-footer-item article-img">
       <!-- => <a href="/singleView/{article.id}"> -->
@@ -75,8 +75,8 @@
 
     <!-- <p>price: {article.price}</p> -->
     <div class="card-footer-item article-amount">
-      <div class="card-header">
-        <p class="card-header-title title is-4">
+      <div class="card-header price-container">
+        <p class="card-header-title title is-4 amount">
           Preis:
           <!-- svelte-ignore a11y-missing-attribute -->
           <!-- svelte-ignore a11y-missing-content -->
@@ -86,31 +86,34 @@
         </p>
       </div>
 
-      <div class="card-header">
+      <div class="card-header article-qty-container">
         <p class="article-qty card-header-title subtitle is-5">Qty:</p>
 
-        <p
-          class="article-qty card-header-title subtitle is-5"
-          on:click={decreaseHandler}
-        >
-          <!-- svelte-ignore a11y-missing-attribute -->
-          <a class="subtitle is-2 is-success is-outlined is-small minus-btn"
-            >-</a
+        <div class="amount-cont">
+          <p
+            class="article-qty card-header-title subtitle is-5"
+            on:click={decreaseHandler}
           >
-        </p>
-        <div class="card-header-title">
-          <!-- svelte-ignore a11y-missing-attribute -->
-          <a class="article-qty subtitle is-5 qty-a">{qty}</a>
-        </div>
+            <!-- svelte-ignore a11y-missing-attribute -->
+            <a class="subtitle is-2 is-success is-outlined is-small minus-btn"
+              >-</a
+            >
+          </p>
+          <div class="card-header-title">
+            <!-- svelte-ignore a11y-missing-attribute -->
+            <a class="article-qty subtitle is-5 qty-a">{qty}</a>
+          </div>
 
-        <p
-          class="article-qty card-header-title subtitle is-5"
-          on:click={increaseHandler}
-        >
-          <!-- svelte-ignore a11y-missing-attribute -->
-          <a class="subtitle is-2 is-success is-outlined is-small plus-btn">+</a
+          <p
+            class="article-qty card-header-title subtitle is-5"
+            on:click={increaseHandler}
           >
-        </p>
+            <!-- svelte-ignore a11y-missing-attribute -->
+            <a class="subtitle is-2 is-success is-outlined is-small plus-btn"
+              >+</a
+            >
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -127,6 +130,29 @@
 </div>
 
 <style>
+  @media only screen and (min-width: 570px) {
+    .amount,
+    .article-qty-container {
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+    .price-container {
+      align-items: center;
+      width: 100%;
+    }
+  }
+
+  @media only screen and (min-width: 770px) {
+    .amount,
+    .article-qty-container {
+      flex-direction: row;
+    }
+  }
+  .amount-cont {
+    flex-direction: row;
+    display: flex;
+  }
   .article-qty {
     margin-bottom: 0;
   }
@@ -137,11 +163,11 @@
   }
   .article-info {
     flex-direction: column;
-    align-items: flex-start;
-    text-align: start;
+    /* align-items: flex-start; */
+    text-align: center;
     gap: 10px;
   }
-  @media only screen and (max-width: 790px) {
+  @media only screen and (max-width: 690px) {
     .article-title {
       font-size: 1rem;
     }
@@ -149,9 +175,23 @@
       font-size: 12px;
     }
   }
+  .card-items {
+    flex-direction: column;
+  }
+  @media only screen and (min-width: 300px) {
+    .card-items {
+      flex-direction: column !important;
+    }
+  }
+  @media only screen and (min-width: 570px) {
+    .card-items {
+      flex-direction: row !important;
+    }
+  }
+
   .article-amount {
     display: flex;
-    align-items: flex-start;
+    /* align-items: flex-start; */
     flex-direction: column;
   }
   .article-delete {
