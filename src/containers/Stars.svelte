@@ -1,37 +1,43 @@
 <script>
-
-  
+  // ein func Prop;
+  // Wird benoetigt, um ein Rating an das Parent-Component
+  // zu schicken.
+  export let getRating = null;
 </script>
 
 <p class="sternebewertung">
-
   <input type="radio" id="stern5" name="bewertung" value="5" /><label
     for="stern5"
-    title="5 Sterne">5 Sterne</label
+    title="5 Sterne"
+    on:click={() => getRating(5)}>5 Sterne</label
   >
   <input type="radio" id="stern4" name="bewertung" value="4" /><label
     for="stern4"
-    title="4 Sterne">4 Sterne</label
+    title="4 Sterne"
+    on:click={() => getRating(4)}>4 Sterne</label
   >
   <input type="radio" id="stern3" name="bewertung" value="3" /><label
     for="stern3"
-    title="3 Sterne">3 Sterne</label
+    title="3 Sterne"
+    on:click={() => getRating(3)}>3 Sterne</label
   >
   <input type="radio" id="stern2" name="bewertung" value="2" /><label
     for="stern2"
-    title="2 Sterne">2 Sterne</label
+    title="2 Sterne"
+    on:click={() => getRating(2)}>2 Sterne</label
   >
   <input type="radio" id="stern1" name="bewertung" value="1" /><label
     for="stern1"
-    title="1 Stern">1 Stern</label
+    title="1 Stern"
+    on:click={() => getRating(1)}>1 Stern</label
   >
 
   <span id="Bewertung" title="Keine Bewertung">
-    <label>
-      <input type="radio" name="bewertung" value="0" checked="checked" /> Cancel Rates
+    <label on:click={() => getRating(0)}>
+      <input type="radio" name="bewertung" value="0" checked="checked" /> Cancel
+      Rates
     </label>
   </span>
-
 </p>
 
 <style>
@@ -46,7 +52,7 @@
   p.sternebewertung {
     float: Left;
   }
-  
+
   p.sternebewertung:not(:checked) > input {
     display: None;
   }

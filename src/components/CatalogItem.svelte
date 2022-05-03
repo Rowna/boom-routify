@@ -1,7 +1,6 @@
 <script>
   import { getAuth } from "firebase/auth";
   // import singleView from "../pages/singleView/[artID].svelte";
-
   // import { onDestroy } from "svelte";
 
   import {

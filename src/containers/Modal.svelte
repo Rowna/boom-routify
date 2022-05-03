@@ -17,6 +17,13 @@
   let userFullName = "";
 
   let modalCSS = "modal is-active is-clipped";
+  let recension = "";
+  let myRating = 0;
+
+  function getRating(rating) {
+    myRating = rating;
+    console.log("Aktuelles Rating: " + rating);
+  }
 
   function closeModal() {
     modalCSS = "modal";
@@ -36,21 +43,41 @@
 
 
   */
-  async function sendHandler() {}
 
-  let recommendation = {
-    rating: "",
-    text: "",
-    userId: user.uid,
-    // userFullName muss noch aus FS geholt werden dazu ab zeile: 72
-    username: userFullName,
-  };
+  if (user !== null) {
+    getDoc(doc(db, `users/${user.uid}`))
+      .then((docsnapshot) => {
+        userFullName = docsnapshot.data().name;
+      })
+      .catch((error) => "Konnte den Username nicht laden:" + error.message);
+  } else {
+    user = null;
+    console.log("User is signed out! ");
+  }
 
-  const recoRef = doc(db, "articles", $params.artID);
-  console.log(recoRef);
-  updateDoc(recoRef, {
-    recommendations: arrayUnion(recommendation),
-  });
+  /* 
+  sendHandler(): Schickt eine neue Rezension in den Firestore, 
+  deshalb ist es ASYNCHRON.
+
+  */
+  async function sendHandler() {
+    /* 
+    const recoRef = doc(db, "articles", $params.artID);
+
+    // Neue Recommendation im FS bauen und schicken.
+    // Regel: Firebase akzeptiert nur ein vollstaendiges Dokument!
+    let recommendation = {
+      rating: myRating,        // int: 
+      text: recension,
+      userId: user.uid,
+      createdAt: Date.now(), // :BigInt: Millisekunden seit 1.1.1970 00:00 Uhr GMT 
+      username: userFullName, // userFullName muss noch aus FS geholt werden dazu ab zeile: 41
+    };
+    updateDoc(recoRef, {
+      recommendations: arrayUnion(recommendation),
+    });
+  */
+  }
 
   /* 
   getDoc(recoRef)
@@ -66,21 +93,6 @@
     .catch((error) => {
       console.log("So eine Scheisse! " + error.message);
     });
-*/
-
-  /*
-    if (user !== null) {
-        getDoc(doc(db, `users/${user.uid}`))
-        .then((docsnapshot) => {
-            userFullName = docsnapshot.data().name;
-        })
-        .catch((error) => "Konnte den Username nicht laden:" + error.message);
-    } else {
-        user = null; 
-        console.log("User is signed out! ");
-    }
-    });
-
 */
 </script>
 
@@ -101,12 +113,14 @@
       </p>
       <div>
         <input
+          bind:value={recension}
           class="input is-primary"
-          type="text"
           placeholder="Your Recension"
+          required
+          type="text"
         />
       </div>
-      <Stars />
+      <Stars {getRating} />
     </section>
     <footer class="modal-card-foot">
       <button class="button is-success" on:click={sendHandler}>Send it</button>
@@ -116,13 +130,13 @@
 
 <style>
   @media only screen and (min-width: 350px) {
-      .modal-card {
-          margin: 0 2rem 0 2rem;
-        }
-}
-@media only screen and (max-width: 770px) {
-      .modal-card {
-          margin: 0;
-        }
-}
+    .modal-card {
+      margin: 0 2rem 0 2rem;
+    }
+  }
+  @media only screen and (max-width: 770px) {
+    .modal-card {
+      margin: 0;
+    }
+  }
 </style>

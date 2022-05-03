@@ -15,7 +15,7 @@
   function ratingHandler() {
     // Ab jetzt ist Modal zu sehen
     modalVisible = true;
-    console.log("Rating Klicked ");
+    console.log("Rating Klicked");
   }
 
   /*
