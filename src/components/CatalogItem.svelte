@@ -28,8 +28,8 @@
   async function addToCartHandler() {
     // Firestore-Pfad auf den richtigen Cart festlegen:
     //     db ist svelte-bulma-Firestore (vgl. z.13)
-    //     users ist die collection, die wir brauchen
-    //     fbAuth.currentUser.uid ist die Dokument-ID, die wir brauchen
+    //     users ist die collection, die ich brauche
+    //     fbAuth.currentUser.uid ist die Dokument-ID, die ich brauche
     // Es ergibt sich also folgender Pfad "users/${fbAuth.currentUser.uid}"
     const userRef = doc(db, "users", fbAuth.currentUser.uid);
     // console.log(userRef);

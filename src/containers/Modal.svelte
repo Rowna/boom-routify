@@ -31,7 +31,7 @@
 
   /* 
   Der Kommentar, der in der Input-Feld ist, muss in der FS Reco gespeichert sein.
-  dafür brauchen wir aber  updateDoc();
+  dafür brauche ich aber  updateDoc();
   const recoRef = doc(db, "articles", $params.artID);
   updateDoc(recoRef).then((docsnapshot) => {}).catch();
 
@@ -60,31 +60,69 @@
   deshalb ist es ASYNCHRON.
 
   */
+  const recoRef = doc(db, "articles", $params.artID);
   async function sendHandler() {
-    /* 
-    const recoRef = doc(db, "articles", $params.artID);
+    /* */
 
     // Neue Recommendation im FS bauen und schicken.
     // Regel: Firebase akzeptiert nur ein vollstaendiges Dokument!
     let recommendation = {
-      rating: myRating,        // int: 
+      rating: myRating, // int:5 (Sterne 5)
       text: recension,
       userId: user.uid,
-      createdAt: Date.now(), // :BigInt: Millisekunden seit 1.1.1970 00:00 Uhr GMT 
+      createdAt: Date.now(), // :BigInt: Millisekunden seit 1.1.1970 00:00 Uhr GMT
       username: userFullName, // userFullName muss noch aus FS geholt werden dazu ab zeile: 41
     };
+
+    /*
+      Schon beim Aufruf der Einzelansicht sollte geklaert werden, 
+      ob der User schon einen kommentar geschrieben hat oder nicht.
+
+      WENN er einen geschrieben hat,
+        wird der Button "Write Recommendation" deaktiviert,
+        und "seine" Recommendation in der Liste bekommt einen "Edit"-Button.
+        
+      Ich muss "Modal.svelte" refaktorisieren zu einem reinen Wrapper-Component
+      (mit <slot>)
+      
+      WriteRecommendation.svelte
+          import Modal from "/src/components/Modal.svelte"
+          <Modal>
+            <!-- Markup fuer das Erstellen einer neuen Recommendation -->
+          </Modal>
+      EditRecommendation.svelte
+        Hier werden die aktuellen Werte aus der Recommendation
+        In das Modal-Formular hineingeschrieben.
+          import Modal from "/src/components/Modal.svelte"
+          <Modal>
+            <!-- Markup fuer das Editiren einer neuen Recommendation -->
+          </Modal>
+
+      Modal.svelte  // ein reines Wrapper-Component / Container-Component
+          <div class="modal-container is-active">
+            // hier kommt das Markup von entweder "WriteRecommendation.svelte"
+            // oder "EditRecommendation.svelte" hinein.
+            <slot />
+          </div>
+            
+    */
     updateDoc(recoRef, {
+      // wenn der reco-Objekt im FS leer ist, dann füge das recommendation-objekt hinzu.
+      // ABER: wenn der user eine reco geschrieben hat, DARF er NICHT 
+      // nochmal eine recension schreiben.
       recommendations: arrayUnion(recommendation),
-    });
-  */
+    })
+      .then((_) => {
+        closeModal();
+      });
   }
 
-  /* 
+  /* */
   getDoc(recoRef)
     .then((docsnapshot) => {
-        console.log(docsnapshot);
+      // console.log(docsnapshot);
 
-        if (docsnapshot.exists()) {
+      if (docsnapshot.exists()) {
         recommendation = { ...docsnapshot.data() };
       } else {
         throw new Error("Nix passendes gefunden!");
@@ -93,7 +131,8 @@
     .catch((error) => {
       console.log("So eine Scheisse! " + error.message);
     });
-*/
+
+
 </script>
 
 <!-- is-active muss eine "Dynamic Class" sein -->

@@ -19,32 +19,32 @@
   }
 
   /*
-    hier muessen wir irgendwie ereignisgesteuert
+    hier muss ich irgendwie ereignisgesteuert
     modalVisible = false;
     einstellen, wenn der User auf den Canvas klickt
     oder auf den Cancel-button im Modal
     oder auf den "Send It" Button im Modal.
   
     DENKEN, Rona, DENKEN!
-    Wir haben gestern genau so eine Technik implementiert!
-    Und wir muessen sie sofort mit implementieren,
-    sonst bekommen wir das Modal nicht wieder abgeschaltet,
+    Ich habe gestern genau so eine Technik implementiert!
+    Und ich muss sie sofort mit implementieren,
+    sonst bekomme ich das Modal nicht wieder abgeschaltet,
     wenn es einmal auf dem Viewport ist.
   */
 
   /*  
   Spec: 
   User-Id ist user.uid: Das wird gebraucht, wenn eine neue Rec-Abfrage abgeschickt wird
-  Das brauchen wir aber erst, wenn wir das Modal haben.
+  Das brauche ich aber erst, wenn ich das Modal habe.
 
   articleID: brauchen wir, damit die neue Rec. beim richtigen Artiekl eingetragen wird.
     sie steht als Endpoint in der URL, die uns auf diese Seite gefuehrt hat:
        http://localhost:5000/singleView/54812nfqi8291
-    die 54812nfqi8291 ist die artikel-ID, die wir auch in der 'articles'-collection finden.
+    die 54812nfqi8291 ist die artikel-ID, die ich auch in der 'articles'-collection finde.
     Wie man an diese ID herankommt, steht in der Routify-Dokumentation. Muss recherchiert
     werden.
 
-  Wenn wir den Artikel haben, haben wir auch alle existierenden Recs!
+  Wenn ich den Artikel habe, habe ich auch alle existierenden Recs!
   
  */
   let article = {};
@@ -56,7 +56,7 @@
     .then((docsnapshot) => {
       if (docsnapshot.exists()) {
         // es wurde was passendes gefunden ;
-        // wir haben jetzt alle article-Daten
+        // Ich habe jetzt alle article-Daten
         // Eine Kopie klonen mit spread-operator
         article = { ...docsnapshot.data() };
         // console.log(article.recommendations);

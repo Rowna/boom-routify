@@ -76,7 +76,7 @@
   const userRef = doc(db, "users", fbAuth.currentUser.uid);
 
   // promise in Svelte ist ein reactive-Status-Variable wegen "let" und "="
-  // und damit können wir in Markup mit `{#await promise}` weiterarbeiten!
+  // und damit kann ich in Markup mit `{#await promise}` weiterarbeiten!
   // Siehe "await Block" in der Svelte.dev Dokumentation
   let promise = getDoc(userDoc)
     .then((snapshot) => {
@@ -88,7 +88,7 @@
       return articles;
 
       // genau. testen kommt auch spaeter. aber jetzt ist das hier soweit fertig.
-      // wir haben jetzt erstmal nur das subtotal, wenn nur ein einziges exemplar
+      // Ich habe jetzt erstmal nur das subtotal, wenn nur ein einziges exemplar
       // eines artikels im cart liegt.
       // das ist ein kleiner fortschritt, aber er bringt uns weiter.
 
