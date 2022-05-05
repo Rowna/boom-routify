@@ -10,10 +10,14 @@
   } from "firebase/firestore";
 
   import CartItem from "../components/CartItem.svelte";
+  import ModalBuy from "../containers/ModalBuy.svelte";
+
   import { getAuth, onAuthStateChanged } from "firebase/auth";
 
   const db = getFirestore();
   const fbAuth = getAuth();
+
+  let modalVisible = false;
 
   // Wichtig, um zu wissen ob der User null ist!
   let user = fbAuth.currentUser;
@@ -103,6 +107,11 @@
       cart: deleteField(),
     });
   }
+
+  function executeHandler() {
+    modalVisible = true;
+    console.log("Gekauft!");
+  }
 </script>
 
 <!-- svelte-ignore missing-declaration -->
@@ -155,7 +164,10 @@
 
           <div class="box btns-container">
             <div class="btns">
-              <a class="button is-primary pay-btn" href="/">Execute Order</a>
+              <!-- svelte-ignore a11y-missing-attribute -->
+              <a class="button is-primary pay-btn" on:click={executeHandler}
+                >Execute Order</a
+              >
               <a
                 class="button is-danger is-light delete-btn"
                 on:click={clearCartHandler}
@@ -165,6 +177,11 @@
                 >Back to Gallery</a
               >
             </div>
+
+            <!-- Hier kommt das Modal -->
+            {#if modalVisible}
+              <ModalBuy />
+            {/if}
           </div>
         {:else}
           <div class="box">
