@@ -3,20 +3,43 @@
   import { doc, getFirestore, getDoc } from "firebase/firestore";
   import { params } from "@roxi/routify";
   import Modal from "../../containers/Modal.svelte";
+  import Platzhalter from "../../containers/Platzhalter.svelte";
+
   import Stars from "../../containers/Stars.svelte";
+  import RatingContainer from "../../components/RatingContainer.svelte";
 
-  const db = getFirestore();
-  const fbAuth = getAuth();
-  let user = fbAuth.currentUser;
+  function fnRecAlreadyWritten() {
+    // console.log(recommendations[0].userId);
+    // console.log("User Id '" + user.uid + "'");
+    if (recommendations && recommendations.length > 0) {
+      return recommendations.indexOf((el) => el.userId == user.uid) === -1;
+    }
 
-  // Modal ist nicht zu sehen
-  let modalVisible = false;
+    return false;
+  }
 
   function ratingHandler() {
     // Ab jetzt ist Modal zu sehen
     modalVisible = true;
     console.log("Rating Klicked");
   }
+
+  function EditRatingHandler() {
+    console.log("Edit geklickt! ... ");
+    platzhalterVisible = true;
+
+  }
+
+  let article = {};
+  const db = getFirestore();
+  const fbAuth = getAuth();
+  let user = fbAuth.currentUser;
+  let recommendations = null;
+  let recAlreadyWritten = false;
+
+  // Modal ist nicht zu sehen
+  let modalVisible = false;
+  let platzhalterVisible = false;
 
   /*
     hier muss ich irgendwie ereignisgesteuert
@@ -47,7 +70,7 @@
   Wenn ich den Artikel habe, habe ich auch alle existierenden Recs!
   
  */
-  let article = {};
+
   // das aktuelle article-doc aus FS holen
   // für die Einzelansicht: braucht man das richtige getDoc(articleRef).then().catch();
 
@@ -60,6 +83,10 @@
         // Eine Kopie klonen mit spread-operator
         article = { ...docsnapshot.data() };
         // console.log(article.recommendations);
+        // Zum Testen, ob der User eine Recension geschrieben hat oder nicht
+        recommendations = article.recommendations;        
+
+        recAlreadyWritten = fnRecAlreadyWritten();
       } else {
         throw new Error("Nix passendes gefunden!");
       }
@@ -67,22 +94,12 @@
     .catch((error) => {
       console.log("So eine Scheisse! " + error.message);
     });
-
-
-
-
-
 </script>
 
 <div class="cart-title">
   <p>BOOM</p>
   <p class="subtitle is-7">Rate your article and read more about it!</p>
 </div>
-<!-- <h1>Die Artikelnummer für diesen Artikle ist: {$params.artID}</h1> -->
-
-<!-- <p class="title">Hello from the Einzelansicht :)</p> -->
-
-<!-- <div class="box"> -->
 
 <div class="base-container">
   <div class="card">
@@ -108,8 +125,7 @@
       {#if modalVisible}
         <Modal />
       {/if}
-      <br class="line">
-
+      <br class="line" />
 
       <!-- Die Beschreibung des Artikels -->
       <div class="card-footer-item desc-container">
@@ -121,11 +137,28 @@
 
         <div class="btns card">
           <!-- Das ist das Modal für Rating -->
-          <p class="rate-btn-container card-content">
-            <!-- svelte-ignore a11y-missing-attribute -->
-            <a class="button is-info rate-btn" on:click={ratingHandler}>Write your Recension</a>
-          </p>
-
+          <!--
+            Entweder "Write your Recension" 
+            oder "Edit your Recension"
+          -->
+          {#if recAlreadyWritten}
+            <p class="rate-btn-container card-content">
+              <!-- svelte-ignore a11y-missing-attribute -->
+              <a class="button is-info edit-btn" on:click={EditRatingHandler}
+                >Edit your Recension</a
+              >
+            </p>
+            {#if platzhalterVisible }
+            <Platzhalter/>
+            {/if}
+          {:else}
+            <p class="rate-btn-container card-content">
+              <!-- svelte-ignore a11y-missing-attribute -->
+              <a class="button is-info rate-btn" on:click={ratingHandler}
+                >Write your Recension</a
+              >
+            </p>
+          {/if}
           <!-- Button für "Back to Gallery" -->
           <p class="rate-btn-container card-content">
             <a class="button is-info gly-btn" href="/catalog">Back to Gallery</a
@@ -138,47 +171,26 @@
 
   <br />
 
-  <div class="card">
-    <div class="">
-      <div class="card-footer-item">
-        <p class="title is-4">Customer Ratings:</p>
-      </div>
-      <div class="card-footer">
-        <div class="card-footer-item kunden-container">
-          <p class="person">Otto Wohlgemut<br />4 Sterne</p>
-          <!-- Hier kommen die Sterne hin, die otto Wohlgemut für diesen Artikle vergeben hat -->
-          <!-- <div class="sterne">Hier kommen die Sterne!</div> -->
+  <!-- 
+    Ich kann aus dem Rating-Block ein eigenes Komponent machen.
+    Ich mache das mit Bulma-Klassen; ist sehr einfach
 
-          <div class="card-footer-item">
-            Soft Dress for all ages of kids with more pretty colours Soft Dress
-            for all ages of kids with more pretty colours Soft Dress for all
-            ages of kids with more. khjhkj kkfhkjshfkh lkjfkfhiadhfaföl
-            kndfkjhaöfhaäfaf
-          </div>
-        </div>
-      </div>
+    <RatingContainer {recommendations} />
+      {#each recommendations as rec }
+        <Rating {rec} />
+      {/each}
+      ...
+  -->
+  {#if recommendations && recommendations.length > 0}
+    <RatingContainer {recommendations} />
+  {/if}
 
-      <div class="card-footer">
-        <div class="card-footer-item kunden-container">
-          <p class="person">Lilly Lichtling<br />5 Sterne</p>
-          <div class="card-footer-item">
-            Soft Dress for all ages of kids with more pretty colours Soft Dress
-            for all ages of kids with more pretty colours Soft Dress for all
-            ages of kids with more. khjhkj kkfhkjshfkh lkjfkfhiadhfaföl
-            kndfkjhaöfhaäfaf
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 
-<!-- </div> -->
 <style>
   .btns {
     width: 100%;
     margin-top: 1rem;
-    /* padding: 3rem 0 1rem 0 */
   }
 
   /* min heißt ab 1024 px */
@@ -190,8 +202,6 @@
       margin-top: 4rem;
       margin-left: auto;
       margin-right: auto;
-      /* flex-direction: column; */
-      /* align-content: center; */
       text-align: left;
       max-width: 1000px;
       width: 100%;
@@ -201,23 +211,13 @@
   @media only screen and (max-width: 1024px) {
     .base-container {
       margin: 5rem 2rem 0 2rem;
-      /* text-align: left; */
-
-      /* display: flex; */
-      /* flex-direction: column; */
-      /* justify-content: center; */
-      /* gap: 3rem; */
     }
   }
 
   @media only screen and (max-width: 690px) {
-    .article-conatiner,
-    .kunden-container {
+    .article-conatiner {
       flex-direction: column;
     }
-    /* .desc-container {
-      margin: 0 15% 0 15%;
-    } */
     .img {
       width: 300px;
       height: 300px;
@@ -242,7 +242,6 @@
   .desc-container {
     display: flex;
     flex-direction: column;
-    /* gap: 2rem; */
   }
 
   .img {
@@ -252,7 +251,8 @@
   }
   .rate-btn-container,
   .rate-btn,
-  .gly-btn {
+  .gly-btn,
+  .edit-btn {
     width: 100%;
   }
   .rate-btn {
@@ -260,5 +260,9 @@
   }
   .gly-btn {
     background-color: #df485b;
+  }
+  .edit-btn {
+    background-color: rgb(109, 169, 237);
+    color: #000;
   }
 </style>
