@@ -12,6 +12,13 @@
     updateDoc,
   } from "firebase/firestore";
 
+  function isInCart() {
+    for (let el of userCart) {
+      if (el.id === article.id) return true;  
+    }
+    return false;
+  }
+
   const fbAuth = getAuth();
   const db = getFirestore();
 
@@ -22,12 +29,14 @@
   // und mit Daten gefüllt, und das Child-Component "<CatalogItem>"
   // WARTET auf ein Prop mit dem Namen "article".
   export let article = {};
+  export let userCart = [];
 
   let modalVisible = false;
 
   let user = fbAuth.currentUser;
-  let cartImage = "shopping-cart";
-
+  let cartImage = isInCart() ? "shopping-cart-filled" : "shopping-cart";
+  console.log("CartImage: " + cartImage)
+  
   async function addToCartHandler() {
     // Firestore-Pfad auf den richtigen Cart festlegen:
     //     db ist svelte-bulma-Firestore (vgl. z.13)

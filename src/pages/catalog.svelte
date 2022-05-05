@@ -3,19 +3,48 @@
   import { getAuth } from "firebase/auth";
 
   // // firestore-hook importieren
-  import { collection, getDocs, getFirestore } from "firebase/firestore";
+  import { 
+    collection,
+     getDoc,
+     getDocs,
+     doc, 
+     getFirestore 
+    } from "firebase/firestore";
 
   const db = getFirestore();
   const fbAuth = getAuth();
   const user = fbAuth.currentUser;
 
   let docs = [];
+  let userCart = [];
 
   if (user !== null) {
     console.log(`Habe die Email ${user.email}`);
   } else {
     console.log("Bin gerade nicht eingeloggt.");
   }
+  /* 
+    1. Schon beim Aufbau der Catalog-Seite muss der Cart des Users 
+    geladen werden.
+    2. Dann muss bei jedem Catalog Item geprueft werden, ob dieses 
+    Item in der Cart Liste steht. (Fuer jedes Catalog Item die Cart
+    Liste als Prop mitschicken.)
+    3. Wenn es drinsteht, muss das Icon auf "filled" gesetzt werden. 
+  */
+  const cartRef = doc(db, "users", fbAuth.currentUser.uid);
+
+  
+  // Wir brauchen das Cart, um bei jedem einzelnen Katalogartikel zu bestimmen,
+  // ob er schon im Cart ist oder nicht.
+  // Dafuer uebergeben wir das Cart als Prop an jedes einzelne <CatalogItem>
+  getDoc(cartRef)
+    .then((docsnapshot) => {
+      userCart = [ ...docsnapshot.data().cart ];
+    })
+    .catch((error) => {
+      "Error " + error.message;
+    });
+
 
   // Connector zur "articles"-Collecion erstellen mit Hilfe des
   // firestore-connectors in $app
@@ -67,7 +96,7 @@
       WICHTIG: Der Name des Props muss im <Catalog> und im <CatalogItem>
       absolute gleich sein!! Sonst kommen die Daten im <CatalogItem> nicht an.
     -->
-      <CatalogItem {article} />
+      <CatalogItem {article} {userCart} />
     {/each}
   </div>
 </div>
