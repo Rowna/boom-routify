@@ -2,6 +2,7 @@
   import { getAuth } from "firebase/auth";
   // import singleView from "../pages/singleView/[artID].svelte";
   // import { onDestroy } from "svelte";
+  import Platzhalter from "../containers/Platzhalter.svelte";
 
   import {
     arrayRemove,
@@ -21,6 +22,8 @@
   // und mit Daten gefüllt, und das Child-Component "<CatalogItem>"
   // WARTET auf ein Prop mit dem Namen "article".
   export let article = {};
+
+  let modalVisible = false;
 
   let user = fbAuth.currentUser;
   let cartImage = "shopping-cart";
@@ -70,8 +73,9 @@
     }
   }
 
-  function addToFavoritesHandler() {
+  async function addToFavoritesHandler() {
     console.log("added to Favorites!");
+    modalVisible = true;
   }
 </script>
 
@@ -80,6 +84,11 @@
     <figure class="image">
       <!-- svelte-ignore a11y-missing-content -->
       <!-- cartSingle: ist das Einzelansicht für Recommendationssystem -->
+      <!-- 
+        Am Ende muss das Gelten: Der User darf nur das Artikel bewerten,
+        nur wenn der User im Einzelansicht ist und auf das Bild dort klickt.
+        Also href="SingleView{article.id}" brauch ich hier nicht.
+      -->
       <a class="cartSingle" href="/singleView/{article.id}">
         <!-- svelte-ignore a11y-img-redundant-alt -->
         <img
@@ -108,6 +117,10 @@
             alt="fav-img"
           />
         </a>
+        <!-- Hier kommt das Modal -->
+        {#if modalVisible}
+          <Platzhalter />
+        {/if}
       {:else}
         <div class="card-foot container">You should log in!</div>
       {/if}

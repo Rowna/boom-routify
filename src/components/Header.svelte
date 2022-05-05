@@ -1,21 +1,11 @@
 <script>
-  import { redirect } from "@roxi/routify";
-
-  import {
-    doc,
-    getDoc,
-    getFirestore,
-  } from "firebase/firestore";
-
-  import {
-    getAuth,
-    onAuthStateChanged,
-  } from "firebase/auth";
+  import { doc, getDoc, getFirestore } from "firebase/firestore";
+  import { getAuth, onAuthStateChanged } from "firebase/auth";
 
   const db = getFirestore();
 
   const fbAuth = getAuth();
-  let user = fbAuth.currentUser; 
+  let user = fbAuth.currentUser;
   let fullUserName = "";
   let logoutButton = false;
 
@@ -41,13 +31,13 @@
   function logoutHandler() {
     logoutButton = true;
     fbAuth
-    // ist ASYNCHRON, d.h. die noetigen anpassungen im
-    // .then vornehmen.
-    .signOut()
-    .then(() => {
-      // location.reload();
-      window.location.href = window.location.href;
-      user = fbAuth.currentUser;
+      // ist ASYNCHRON, d.h. die noetigen anpassungen im
+      // .then vornehmen.
+      .signOut()
+      .then(() => {
+        // location.reload();
+        window.location.href = window.location.href;
+        user = fbAuth.currentUser;
         // console.log("Ausgeloggt!");
       })
       .catch((error) => "Konnte nicht ausloggen: " + error.message);
@@ -56,7 +46,7 @@
 
 <!-- svelte-ignore a11y-no-redundant-roles -->
 <nav class="navbar" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
+  <div class="navbar-brand navbar-container">
     <a class="navbar-item logo" href="/">BOOM</a>
     <!-- Mobile Version / If User nicht eingeloggt -->
     {#if !fbAuth.currentUser && !logoutButton}
@@ -102,9 +92,9 @@
               <div>
                 <a class="button is-white" href="/cart">Shopping Cart</a>
               </div>
-              <div class="imge">
+              <a class="imge" href="/bookmark">
                 <img src="../images/herz.png" alt="Fav" />
-              </div>
+              </a>
               <div class="select is-white">
                 <select class="sel">
                   <option>{fullUserName}</option>
@@ -143,6 +133,9 @@
   }
   .navbar-brand {
     padding: 0;
+  }
+  .navbar-container {
+    margin-left: 2rem;
   }
 
   @media only screen and (max-width: 1024px) {

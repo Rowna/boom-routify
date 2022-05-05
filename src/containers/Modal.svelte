@@ -18,6 +18,7 @@
 
   let modalCSS = "modal is-active is-clipped";
   let recension = "";
+  let myRecommendation = null;
   let myRating = 0;
 
   function getRating(rating) {
@@ -62,8 +63,6 @@
   */
   const recoRef = doc(db, "articles", $params.artID);
   async function sendHandler() {
-    /* */
-
     // Neue Recommendation im FS bauen und schicken.
     // Regel: Firebase akzeptiert nur ein vollstaendiges Dokument!
     let recommendation = {
@@ -114,6 +113,7 @@
     })
       .then((_) => {
         closeModal();
+        window.location.href = window.location.href;
       });
   }
 
@@ -123,7 +123,7 @@
       // console.log(docsnapshot);
 
       if (docsnapshot.exists()) {
-        recommendation = { ...docsnapshot.data() };
+        myRecommendation = { ...docsnapshot.data() };
       } else {
         throw new Error("Nix passendes gefunden!");
       }

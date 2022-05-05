@@ -51,6 +51,7 @@
       cart: arrayRemove(cartItem),
     });
   }
+
 </script>
 
 <div class="box card">
@@ -58,6 +59,17 @@
     <!-- <h2>Art-Nr: {article.id}</h2> -->
     <div class="card-footer-item article-img">
       <!-- => <a href="/singleView/{article.id}"> -->
+      <!--
+          Wenn ich das mit Modal richtig verstanden habe, muss das so aussehen:
+          Schon beim Aufruf der Einzelansicht sollte geklaert werden, 
+          ob der User schon einen kommentar geschrieben hat oder nicht.
+
+          WENN er einen geschrieben hat,
+            wird der Button "Write Recommendation" deaktiviert,
+            und "seine" Recommendation in der Liste bekommt einen "Edit"-Button.
+          
+          Dazu weiter in Zeile 56 
+        -->
       <a href="/singleView/{article.id}">
         <img class="imge" src="images/{article.img}" alt="article" />
       </a>
