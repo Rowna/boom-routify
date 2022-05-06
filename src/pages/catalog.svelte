@@ -34,9 +34,9 @@
   const cartRef = doc(db, "users", fbAuth.currentUser.uid);
 
   
-  // Wir brauchen das Cart, um bei jedem einzelnen Katalogartikel zu bestimmen,
+  // Ich brauche das Cart, um bei jedem einzelnen Katalogartikel zu bestimmen,
   // ob er schon im Cart ist oder nicht.
-  // Dafuer uebergeben wir das Cart als Prop an jedes einzelne <CatalogItem>
+  // Dafuer uebergebe ich das Cart als Prop an jedes einzelne <CatalogItem>
   getDoc(cartRef)
     .then((docsnapshot) => {
       userCart = [ ...docsnapshot.data().cart ];
