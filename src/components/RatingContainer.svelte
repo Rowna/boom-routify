@@ -6,7 +6,7 @@
 </script>
 
 <div class="card">
-  <div class="card-footer-item">
+  <div class="card-footer-item title-container">
     <p class="title is-4">Customer Ratings:</p>
   </div>
 
@@ -18,4 +18,8 @@
 </div>
 
 <style>
+  .title-container {
+    justify-content: center;
+  }
+
 </style>

@@ -3,30 +3,73 @@
   // Wird benoetigt, um ein Rating an das Parent-Component
   // zu schicken.
   export let getRating = null;
+
+  /*
+  import { getAuth } from "firebase/auth";
+  import {
+     getDoc,
+     doc, 
+     getFirestore 
+    } from "firebase/firestore";
+
+  const fbAuth = getAuth();
+  const user = fbAuth.currentUser;
+
+  const articleRef = doc(db, "articles", $params.artID);
+  let recommendations = null;
+
+
+  getDoc(articleRef)
+    .then((docsnapshot) => {
+      if (docsnapshot.exists()) {
+        article = { ...docsnapshot.data() };
+        recommendations = article.recommendations;        
+      } else {
+        throw new Error("Nix passendes gefunden!");
+      }
+    })
+    .catch((error) => {
+      console.log("So eine Scheisse! " + error.message);
+    });
+
+
+   function isRated() {
+    for (let el of recommendations) {
+      if (el.userId === user.id) return true;  
+    }
+    return false;
+  }
+
+  */
 </script>
 
 <p class="sternebewertung">
-  <input type="radio" id="stern5" name="bewertung" value="5" /><label
+  <input type="radio" id="stern5" name="bewertung" value="5" />
+  <label
     for="stern5"
     title="5 Sterne"
     on:click={() => getRating(5)}>5 Sterne</label
   >
-  <input type="radio" id="stern4" name="bewertung" value="4" /><label
+  <input type="radio" id="stern4" name="bewertung" value="4" />
+  <label
     for="stern4"
     title="4 Sterne"
     on:click={() => getRating(4)}>4 Sterne</label
   >
-  <input type="radio" id="stern3" name="bewertung" value="3" /><label
+  <input type="radio" id="stern3" name="bewertung" value="3" />
+  <label
     for="stern3"
     title="3 Sterne"
     on:click={() => getRating(3)}>3 Sterne</label
   >
-  <input type="radio" id="stern2" name="bewertung" value="2" /><label
+  <input type="radio" id="stern2" name="bewertung" value="2" />
+  <label
     for="stern2"
     title="2 Sterne"
     on:click={() => getRating(2)}>2 Sterne</label
   >
-  <input type="radio" id="stern1" name="bewertung" value="1" /><label
+  <input type="radio" id="stern1" name="bewertung" value="1" />
+  <label
     for="stern1"
     title="1 Stern"
     on:click={() => getRating(1)}>1 Stern</label

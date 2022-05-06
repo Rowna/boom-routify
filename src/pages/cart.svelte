@@ -168,6 +168,11 @@
               <a class="button is-primary pay-btn" on:click={executeHandler}
                 >Execute Order</a
               >
+            </div>
+          </div>
+          <div class="box btns-container">
+            <div class="btns">
+
               <a
                 class="button is-danger is-light delete-btn"
                 on:click={clearCartHandler}
@@ -183,6 +188,7 @@
               <ModalBuy />
             {/if}
           </div>
+
         {:else}
           <div class="box">
             <div>
@@ -294,8 +300,10 @@
   .delete-btn {
     color: rgb(134, 131, 131) !important;
     border: solid 1px rgb(199, 197, 197);
+    margin-top: 1rem;
   }
   .gallery-btn {
+    margin-top: 1rem;
     background-color: #df485b;
   }
 </style>

@@ -8,18 +8,43 @@
   import Stars from "../../containers/Stars.svelte";
   import RatingContainer from "../../components/RatingContainer.svelte";
 
-  function fnRecAlreadyWritten() {
-    // console.log(recommendations[0].userId);
-    // console.log("User Id '" + user.uid + "'");
-    if (recommendations && recommendations.length > 0) {
-      return recommendations.indexOf((el) => el.userId == user.uid) === -1;
+
+
+    /* 
+    1. Schon beim Aufbau der Einselansicht-Seite muss das article
+    geladen werden.
+    2. Dann muss bei diesem artikle geprueft werden, ob das artikle 
+    einen Kommentar hat.
+    3. Wenn er drinsteht, muessen die Sterne auf "Nummer von gegebenen 
+    Sterne" gesetzt werden. 
+    
+    */
+   
+   function fnRecAlreadyWritten() {
+     // console.log(recommendations[0].userId);
+     // console.log("User Id '" + user.uid + "'");
+
+     if (recommendations && recommendations.length > 0 )  {
+       for (let el of recommendations) {
+        if (el.userId ===  user.uid) 
+        return true;
+      //  return recommendations.indexOf((el) => el.userId === user.uid) === -1;
+      }
+      return false;
     }
-
-    return false;
   }
+    
+    /*
+    for (let el of userCart) {
+      if (el.id === article.id) return true;  
+    }
+    return false;
+    }
+    */
 
-  function ratingHandler() {
-    // Ab jetzt ist Modal zu sehen
+    
+    function ratingHandler() {
+      // Ab jetzt ist Modal zu sehen
     modalVisible = true;
     console.log("Rating Klicked");
   }
@@ -27,15 +52,14 @@
   function EditRatingHandler() {
     console.log("Edit geklickt! ... ");
     platzhalterVisible = true;
-
   }
-
+  
   let article = {};
   const db = getFirestore();
   const fbAuth = getAuth();
-  let user = fbAuth.currentUser;
   let recommendations = null;
   let recAlreadyWritten = false;
+  let user = fbAuth.currentUser;
 
   // Modal ist nicht zu sehen
   let modalVisible = false;
@@ -48,7 +72,6 @@
     oder auf den Cancel-button im Modal
     oder auf den "Send It" Button im Modal.
   
-    DENKEN, Rona, DENKEN!
     Ich habe gestern genau so eine Technik implementiert!
     Und ich muss sie sofort mit implementieren,
     sonst bekomme ich das Modal nicht wieder abgeschaltet,
@@ -68,7 +91,6 @@
     werden.
 
   Wenn ich den Artikel habe, habe ich auch alle existierenden Recs!
-  
  */
 
   // das aktuelle article-doc aus FS holen
@@ -94,6 +116,7 @@
     .catch((error) => {
       console.log("So eine Scheisse! " + error.message);
     });
+   
 </script>
 
 <div class="cart-title">
@@ -148,8 +171,8 @@
                 >Edit your Recension</a
               >
             </p>
-            {#if platzhalterVisible }
-            <Platzhalter/>
+            {#if platzhalterVisible}
+              <Platzhalter />
             {/if}
           {:else}
             <p class="rate-btn-container card-content">
@@ -184,7 +207,6 @@
   {#if recommendations && recommendations.length > 0}
     <RatingContainer {recommendations} />
   {/if}
-
 </div>
 
 <style>
