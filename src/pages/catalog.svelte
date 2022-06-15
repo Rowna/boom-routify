@@ -31,20 +31,23 @@
     Liste als Prop mitschicken.)
     3. Wenn es drinsteht, muss das Icon auf "filled" gesetzt werden. 
   */
-  const cartRef = doc(db, "users", fbAuth.currentUser.uid);
 
-  
-  // Ich brauche das Cart, um bei jedem einzelnen Katalogartikel zu bestimmen,
-  // ob er schon im Cart ist oder nicht.
-  // Dafuer uebergebe ich das Cart als Prop an jedes einzelne <CatalogItem>
-  getDoc(cartRef)
+ 
+ // Ich brauche das Cart, um bei jedem einzelnen Katalogartikel zu bestimmen,
+ // ob er schon im Cart ist oder nicht.
+ // Dafuer uebergebe ich das Cart als Prop an jedes einzelne <CatalogItem>
+  if (user) { // Der User ist Null, darf aber keinen Cart haben, weil der user keinen uid hat
+    const userRef = doc(db, "users", user.uid);
+ 
+    getDoc(userRef)
     .then((docsnapshot) => {
       userCart = [ ...docsnapshot.data().cart ];
     })
     .catch((error) => {
-      "Error " + error.message;
+      console.log("So eine Scheisse! " + error.message);
+      window.location.href = window.location.href;
     });
-
+ }
 
   // Connector zur "articles"-Collecion erstellen mit Hilfe des
   // firestore-connectors in $app
@@ -65,7 +68,7 @@
       docs = theArticles;
       // console.log(theArticles);
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.error("The Error is: " + error.message));
 </script>
 
 <!-- Notification zur Info wenn der User sich ausloggt wird rot bzw. einloggt wird orang -->
@@ -86,6 +89,7 @@
   </div>
 
   <div class="catalog-container">
+    <!-- Listenschleife mit {#each} in Svelte -->
     {#each docs as article (article.id)}
       <!-- 
       { article } ist als Prop für das <CatalogItem>-Component definiert, 
