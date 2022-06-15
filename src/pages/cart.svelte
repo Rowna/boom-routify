@@ -76,12 +76,18 @@
     All dies muss in einer .then()-Kette passieren, weil alles asynchron ist!
   */
 
+  // Ich glaube, die sind ähnlich user ist auch = fbAuth.currentUser
   const userDoc = doc(db, "users", user.uid);
   const userRef = doc(db, "users", fbAuth.currentUser.uid);
 
-  // promise in Svelte ist ein reactive-Status-Variable wegen "let" und "="
-  // und damit kann ich in Markup mit `{#await promise}` weiterarbeiten!
-  // Siehe "await Block" in der Svelte.dev Dokumentation
+  /* 
+   promise in Svelte ist ein reactive-Status-Variable wegen "let" und "="
+   und damit kann ich in Markup mit `{#await promise}` weiterarbeiten!
+   Siehe "await Block" in der Svelte.dev Dokumentation
+   Das letzte Promise aus der .then()-Reihe wird in der Variable "promise"
+   gespeichert und dieses gespeicherte "promise" benutzt dann
+   {#await} im Markup in Svelte.
+  */
   let promise = getDoc(userDoc)
     .then((snapshot) => {
       // console.log(snapshot.data().cart);
@@ -90,20 +96,14 @@
       getSubTotal(articles);
       // gibt die articles fuer {#await} zurueck.
       return articles;
-
-      // genau. testen kommt auch spaeter. aber jetzt ist das hier soweit fertig.
-      // Ich habe jetzt erstmal nur das subtotal, wenn nur ein einziges exemplar
-      // eines artikels im cart liegt.
-      // das ist ein kleiner fortschritt, aber er bringt uns weiter.
-
-      // Guten Abo -- danke :)
     })
-    .catch((error) => console.error(error));
+    .catch((error) => console.error("The Error is: " + error.message));
 
   // Die Cart leeren.
   function clearCartHandler() {
     console.log("FieldRemove()");
     updateDoc(userRef, {
+      // cart: [],
       cart: deleteField(),
     });
   }
@@ -136,12 +136,12 @@
           {#each articles as article (article.id)}
             <CartItem {article} {getSubUpdate} />
           {/each}
-
+          <!-- Hier beginnt mit CartBox in React  -->
           <!-- Total Preis -->
           <div class="totals card">
             <div class="card-footer">
               <p class="card-footer-item title is-3 total">Subtotal:</p>
-              <p class="card-footer-item title is-5">{subtotal} €</p>
+              <p class="card-footer-item title is-4">{subtotal} €</p>
             </div>
 
             <div class="card-footer">
@@ -154,8 +154,10 @@
 
           <div class="card">
             <br />
-            <div class="card-footer">
-              <p class="card-footer-item title is-4 total">Estimate Total:</p>
+            <div class="card-footer cb-estimate-total">
+              <p class="card-footer-item title is-4 total cb-total">
+                Estimate Total:
+              </p>
               <p class="card-footer-item title is-4">
                 <code>{subtotal} €</code>
               </p>
@@ -165,41 +167,43 @@
           <div class="box btns-container">
             <div class="btns">
               <!-- svelte-ignore a11y-missing-attribute -->
-              <a class="button is-primary pay-btn" on:click={executeHandler}
+              <a class="button is-primary cb-pay-btn" on:click={executeHandler}
                 >Execute Order</a
               >
             </div>
           </div>
-          <div class="box btns-container">
+          <div class="box btns-container cart-btns">
             <div class="btns">
-
               <a
-                class="button is-danger is-light delete-btn"
+                class="button cb-delete-btn"
                 on:click={clearCartHandler}
                 href="/catalog">Delelte all Articles</a
               >
-              <a class="button gallery-btn is-primary" href="/catalog"
+              <a class="button cb-gallery-btn is-primary" href="/catalog"
                 >Back to Gallery</a
               >
             </div>
+            <!-- Hier endet CartBox-Component in React -->
 
             <!-- Hier kommt das Modal -->
             {#if modalVisible}
               <ModalBuy />
             {/if}
           </div>
-
         {:else}
-          <div class="box">
+          <!-- Hier beginnt CartEmpty-Component in React -->
+          <div class="box box1">
             <div>
               <p class="title is-4">
                 ... The Cart is waiting for your Articles!
               </p>
             </div>
-            <div class="gallery-btn btns">
-              <a class="button is-primary" href="/catalog">Back to Gallery</a>
-            </div>
           </div>
+          <div class="box box2">
+            <a class="button is-primary ce-gallery-btn" href="/catalog"
+              >Back to Gallery</a>
+          </div>
+          <!-- Hier endet CartEmpty-Component in React -->
         {/if}
       </div>
     {:catch error}
@@ -274,36 +278,68 @@
       max-width: 1000px;
     }
   }
-  .gallery-btn {
-    margin-top: 3rem;
-  }
+
   .btns-container {
     margin-top: 2rem;
+  }
+  .cart-btns {
+    margin-top: 0;
   }
   .btns {
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
-  .gallery-btn,
-  .pay-btn,
-  .delete-btn {
+  .cb-pay-btn,
+  .cb-delete-btn {
     font-size: 1.3rem;
     margin: 5rem 0 1rem 0;
     border-radius: 10px;
-    margin-top: 0;
+    width: 100%;
+    /* margin-top: 0; */
+    justify-content: center;
   }
-  .pay-btn {
+  .cb-pay-btn {
     margin-top: 1rem;
     background-color: #6acc6a;
   }
-  .delete-btn {
+  .cb-delete-btn {
     color: rgb(134, 131, 131) !important;
+    background-color: #ebf6fb !important;
     border: solid 1px rgb(199, 197, 197);
     margin-top: 1rem;
+    width: 100%;
   }
-  .gallery-btn {
+  .cb-gallery-btn {
     margin-top: 1rem;
-    background-color: #df485b;
+    margin-bottom: 1rem;
+    background-color: #df485b !important;
+    width: 100%;
+    font-size: 1.3rem;
+    border-radius: 10px;
+    justify-content: center;
   }
+
+  .ce-gallery-btn {
+    background-color: #df485b;
+    font-size: 1.3rem;
+    border-radius: 10px;
+    color: rgb(255, 255, 255);
+    width: 70%;
+    margin: 0;
+    justify-content: center;
+  }
+  /* .box1 {
+  margin-top: 5rem;
+  text-align: center;
+}
+.box2 {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+}
+.box2:hover {
+  box-shadow: none !important;
+} */
 </style>

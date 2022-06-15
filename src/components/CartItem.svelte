@@ -10,14 +10,14 @@
   const db = getFirestore();
   const fbAuth = getAuth();
 
-  // Wichtig, um zu wissen ob der User null ist!
-  let user = fbAuth.currentUser;
-  if (user !== null) {
-    console.log(`Habe die Email ${user.email}`);
-  } else {
-    console.log("Bin gerade nicht eingeloggt.");
-  }
-
+  /* Wichtig, um zu wissen ob der User null ist!
+   let user = fbAuth.currentUser;
+   if (user !== null) {
+     console.log(`Habe die Email ${user.email}`);
+   } else {
+     console.log("Bin gerade nicht eingeloggt.");
+   }
+  */
   export let getSubUpdate = null;
   export let article;
   // export let promise;
@@ -33,16 +33,16 @@
     img: article.img,
   };
 
-  function increaseHandler() {
-    qty++;
-    getSubUpdate(article.price);
-  }
-
   function decreaseHandler() {
     if (qty > 1) {
       qty--;
       getSubUpdate(-article.price);
     }
+  }
+
+  function increaseHandler() {
+    qty++;
+    getSubUpdate(article.price);
   }
 
   function removeArtikelHandler() {
@@ -51,14 +51,12 @@
       cart: arrayRemove(cartItem),
     });
   }
-
 </script>
 
 <div class="box card">
   <div class="card-footer card-items">
     <!-- <h2>Art-Nr: {article.id}</h2> -->
     <div class="card-footer-item article-img">
-      <!-- => <a href="/singleView/{article.id}"> -->
       <!--
           Wenn ich das mit Modal richtig verstanden habe, muss das so aussehen:
           Schon beim Aufruf der Einzelansicht sollte geklaert werden, 
@@ -71,11 +69,11 @@
           Dazu weiter in Zeile 56 
         -->
       <a href="/singleView/{article.id}">
+        <!-- imge ist überall in alles Components gleich, wegen Scoped -->
         <img class="imge" src="images/{article.img}" alt="article" />
       </a>
     </div>
 
-    <!-- <p>title: {article.title}</p> -->
     <div class="card-footer-item article-info">
       <div>
         <h2 class="article-title title is-4">{article.title}</h2>
@@ -85,56 +83,70 @@
       </div>
     </div>
 
-    <!-- <p>price: {article.price}</p> -->
     <div class="card-footer-item article-amount">
-      <div class="card-header price-container">
-        <p class="card-header-title title is-4 amount">
-          Preis:
-          <!-- svelte-ignore a11y-missing-attribute -->
-          <!-- svelte-ignore a11y-missing-content -->
-          <a class="subtitle card-header-title is-5 price-a">
-            {article.price} €
-          </a>
+      
+      <div class="card-header-title title is-4 amount card-header">
+        Preis:
+        <p class="subtitle card-header-title is-5 price-a">
+          {article.price} €
         </p>
       </div>
 
+
       <div class="card-header article-qty-container">
-        <p class="article-qty card-header-title subtitle is-5">Qty:</p>
+        <p class="article-qty card-header-title subtitle is-5 ci-article-qty">
+          Qty:
+        </p>
 
         <div class="amount-cont">
-          <p
-            class="article-qty card-header-title subtitle is-5"
+          <!-- Decrease Quantity -->
+          <div
+            class="article-qty-minus card-header-title subtitle is-5 ci-article-qty"
             on:click={decreaseHandler}
           >
             <!-- svelte-ignore a11y-missing-attribute -->
-            <a class="subtitle is-2 is-success is-outlined is-small minus-btn"
-              >-</a
-            >
-          </p>
+            <img
+              class="subtitle is-2 is-success is-outlined is-small minus-btn"
+              src="./images/minus.png"
+              alt="pic"
+            />
+        </div>
+
+          <!-- Quantity ab 1 -->
           <div class="card-header-title">
             <!-- svelte-ignore a11y-missing-attribute -->
             <a class="article-qty subtitle is-5 qty-a">{qty}</a>
           </div>
 
-          <p
-            class="article-qty card-header-title subtitle is-5"
+          <!-- Increase Quantity -->
+          <div
+            class="article-qty-plus card-header-title subtitle is-5"
             on:click={increaseHandler}
           >
             <!-- svelte-ignore a11y-missing-attribute -->
-            <a class="subtitle is-2 is-success is-outlined is-small plus-btn"
-              >+</a
-            >
-          </p>
+            <img
+              class="subtitle is-2 is-success is-outlined is-small plus-btn"
+              src="./images/plus.png"
+              alt="pic"
+            />
+        </div>
         </div>
       </div>
     </div>
   </div>
+
   <div class="card-footer">
     <!-- svelte-ignore a11y-missing-attribute -->
+    <!-- Routing: <a> ist gleich wie <Link> in React -->
+    <a 
+      href="/catalog" 
+      class="button card-footer-item ci-gallery-btn is-primary"
+      >To Gallery
+    </a>
     <a
       href="/catalog"
       on:click={removeArtikelHandler}
-      class="button card-footer-item article-delete is-dark"
+      class="button card-footer-item delete-btn"
     >
       Remove this Article
     </a>
@@ -168,6 +180,14 @@
   .article-qty {
     margin-bottom: 0;
   }
+  .article-qty-plus {
+    width: 60px;
+  }
+  .article-qty-minus {
+    margin-bottom: 0;
+    width: 60px;
+  }
+
   .imge {
     object-position: center;
     width: 120px;
@@ -206,15 +226,33 @@
     /* align-items: flex-start; */
     flex-direction: column;
   }
-  .article-delete {
-    margin-top: 5px;
-    color: rgb(255, 255, 255);
+  .delete-btn,
+  .ci-gallery-btn {
+    width: 50%;
+    justify-content: center;
+    margin: 10px;
+    background-color: transparent !important;
+
+    border: 1px solid rgb(212, 207, 207) !important;
+    color: rgb(28, 26, 26) !important;
+    text-decoration: none !important;
+    box-shadow: rgba(123, 123, 179, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+    rgba(87, 132, 177, 0.35) 0px -2px 6px 0px inset !important;
   }
-  .article-delete:hover {
+  .delete-btn:hover {
     cursor: pointer;
-    background-color: #f14668;
+    background-color: #8d4856;
     color: rgb(255, 255, 255);
   }
+  .ci-gallery-btn:hover,
+  .delete-btn:hover {
+  border: solid 1.8px #cc0b32 !important;
+  color: #cc0b32 !important;
+}
+  /* .ci-gallery-btn {
+    background-color: #b14b60;
+  } */
 
   .plus-btn,
   .minus-btn {
@@ -229,4 +267,9 @@
   .price-a {
     color: rgb(130, 152, 145);
   }
+
+/* 
+  .ci-article-qty {
+  margin-bottom: 0 !important;
+} */
 </style>
