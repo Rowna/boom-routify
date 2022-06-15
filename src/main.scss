@@ -9,6 +9,9 @@ $brown: #757763;
 $beige-light: #D0D1CD;
 $beige-lighter: #EFF0EB;
 
+// von mir definierten Werten
+$pinky: #df485b;
+
 // Update Bulma's global variables
 $family-sans-serif: "Nunito", sans-serif;
 $grey-dark: $brown;
@@ -25,11 +28,12 @@ $input-border-color: transparant;
 $input-shadow: none;
 
 // Import only what you need from Bulma
-@import "../node_modules/bulma/sass/utilities/_all";
 @import "../node_modules/bulma/sass/base/_all";
+@import "../node_modules/bulma/sass/components/_all";
 @import "../node_modules/bulma/sass/elements/_all";
 @import "../node_modules/bulma/sass/form/_all";
-@import "../node_modules/bulma/sass/components/_all";
 @import "../node_modules/bulma/sass/grid/_all";
 @import "../node_modules/bulma/sass/helpers/_all";
 @import "../node_modules/bulma/sass/layout/_all";
+@import "../node_modules/bulma/sass/utilities/_all";
+
