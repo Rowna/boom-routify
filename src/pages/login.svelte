@@ -25,14 +25,15 @@
 
     console.log("Logging in!");
   }
+  
 </script>
 
-<div class="base-container catalog-item card">
+<div class="base-container card">
   <!-- on:submit|preventDefault={handleSubmit} -->
   <div class="form">
     <h1 class="title-cont is-medium">BOOM | Log In</h1>
     <div class="form-container">
-      <label for="email">Your E-Mail</label>
+      <label for="email" class="li-label">Your E-Mail</label>
       <input
         required
         type="email"
@@ -40,30 +41,33 @@
         placeholder="Your E-Mail"
         bind:value={userInput.emailInput}
       />
-      <label for="password">Your Password</label>
+      <label for="password" class="li-label">Your Password</label>
       <input
         class="input is-rounded"
         type="password"
         placeholder="Your Password"
         bind:value={userInput.passWordInput}
       />
-      <a href="/" class="password__">Password forgotten? Choose New!</a>
+      <a href="/" class="form-container__pass"
+        >Password forgotten? Choose New!</a
+      >
     </div>
 
     <button
       on:click|preventDefault={handleSubmit}
-      class="button is-rounded is-primary btn"
+      class="button is-rounded is-primary li-btn"
       >Log In
     </button>
     <div class="para-contianer">
-      <p class="para__title">Password forgotten?</p>
+      <p class="para-contianer__title">Password forgotten?</p>
       <span class="line">|</span>
-      <a class="para__title __member" href="/signup">New Member?</a>
+      <a class="para-contianer__title2" href="/signup">New Member?</a>
     </div>
   </div>
 </div>
 
-<style>
+<style global lang="scss">
+  @import "../main.scss";
   .base-container {
     background-color: rgb(240, 235, 235);
     border-top-right-radius: 8%;
@@ -115,48 +119,47 @@
     text-align: left;
     color: #000;
   }
-  label {
+  .li-label {
     padding-bottom: 2px !important;
-    margin-top: 1.8rem;
+    margin-top: 2rem;
     padding: 10px calc(calc(0.75em - 2px) + 0.375em);
   }
   .button,
   .para-contianer {
     padding: 1rem 1.5rem;
   }
-  .btn {
-    margin-top: 1rem;
+  .li-btn {
+    margin-top: 2rem;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-family: "Sofia";
+    background: #db4e61 !important;
+    // color: rgb(31, 28, 28);
+    width: 100%;
   }
   .para-contianer {
     display: flex;
     gap: 5px;
     justify-content: flex-end;
   }
-  .is-primary {
-    font-family: "Sofia";
-    background: #db4e61;
-    color: rgb(31, 28, 28);
-    width: 100%;
-  }
-  .para__title {
-    /* margin: 0.8rem; */
+  .para-contianer__title {
     color: rgb(77, 75, 75);
     text-align: right;
     font-family: "Patrick Hand";
   }
-  .para__title:hover,
-  .password__:hover,
-  .__member {
+  .para-contianer__title:hover,
+  .form-container__pass:hover,
+  .para-contianer__title2 {
     cursor: pointer;
     color: #db4e61;
   }
-  .__member {
-    color: #df485b;
+  .para-contianer__title2 {
+    color: $pinky;
   }
   .line {
     color: rgb(31, 28, 28);
   }
-  .password__ {
+  .form-container__pass {
     padding: 1.5rem 1rem;
     color: rgb(77, 75, 75);
     font-size: 10px;
