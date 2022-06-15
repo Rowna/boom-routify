@@ -89,9 +89,6 @@
     line-height: 45px;
     cursor: Pointer;
   }
-  /* span#Bewertung input[type="radio"] { */
-  /*display: None;*/
-  /* } */
   p.sternebewertung {
     float: Left;
   }

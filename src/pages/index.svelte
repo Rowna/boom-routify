@@ -4,11 +4,11 @@
   import { onDestroy } from "svelte";
   import { app } from "../stores/app";
 
-  /* */
   let showSignup;
   let showLogin;
   let unsubscribe;
-
+  
+  // Überprüfen ob app wichtig ist ..
   unsubscribe = app.subscribe((app) => {
     showSignup = app.showSignup;
     showLogin = app.showLogin;

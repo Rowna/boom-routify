@@ -10,7 +10,6 @@
 
   let userInput = { fullNameInput: "", emailInput: "", passWordInput: "" };
   let errors = { fullName: "", mail: "", passWord: "" };
-
   let isValid = false;
 
   // Name Validierung durch RegEx
@@ -30,7 +29,6 @@
     let isLongEnough = pPassWord.length >= 8;
     var passwordRegEx = /[A-Za-z-#\?!=@$%^&\*0-9]{8,}/g;
     return isLongEnough && passwordRegEx.test(pPassWord);
-    // return isLongEnough;
   }
 
   // Form-Validierung
@@ -66,13 +64,14 @@
   }
 
   function handleSubmit(data) {
-    // ABLAUF:
+    /* ABLAUF:
     // email und passwort werden aus dem Formular geholt.
     // email und passwort werden an firebase geschickt.
     //    --> firebase richtet einen neuen user in der Auth-Datenbank ein
     //    --> firebase erstellt einen sog. Token, in dem die E-Mail und die
     //        user-ID drinstehen, und zwer in einem Objekt, das "user" heisst.
-    //    <<< firebase schickt den Token zurueck an die App.
+    //   <<< firebase schickt den Token zurueck an die App.
+    */
 
     createUserWithEmailAndPassword(
       fbAuth,
@@ -127,7 +126,7 @@
 
 <div class="base-container">
   <div on:submit|preventDefault={handleSubmit} class="form">
-    <h1 class="title-cont is-medium">BOOM | Sign Up</h1>
+    <h1 class="signup-boom-title is-medium">BOOM | Sign Up</h1>
     <div class="form-container">
       <label for="name">Full Name</label>
       <input
@@ -137,7 +136,8 @@
         class="input is-rounded"
         placeholder="Your Full Name"
       />
-      <p class="error">{errors.fullName}</p>
+      <p class="error-message">{errors.fullName}</p>
+
       <label for="email">E-Mail</label>
       <input
         required
@@ -205,7 +205,7 @@
   .form {
     padding: 2rem 1.5rem;
   }
-  .title-cont {
+  .signup-boom-title {
     color: #000;
     font-family: "Sofia";
     font-size: 1.5rem;
@@ -213,7 +213,7 @@
     position: relative;
     margin-bottom: 2.7rem;
   }
-  .title-cont::after {
+  .signup-boom-title::after {
     position: absolute;
     content: "Hi there! Nice to see you!";
     color: #9c9898;
@@ -231,10 +231,11 @@
   }
   label {
     padding-bottom: 2px !important;
-    /* margin-top: 15px; */
+    font-family: inherit;
     padding: 10px calc(calc(0.75em - 2px) + 0.375em);
+    /* margin-top: 15px; */
   }
-  .error {
+  .error-message {
     padding: 5px calc(calc(0.75em - 2px) + 0.375em);
     color: red;
     font-size: 14px;
@@ -242,12 +243,13 @@
   }
   .is-primary {
     font-family: "Sofia";
-    /* background: #db4e61; */
     color: rgb(31, 28, 28);
     width: 100%;
   }
   .check {
     border: #db4e61 2px solid;
+    justify-content: center;
+    font-size: 1.1rem;
     background-color: #f8bbbb;
     box-shadow: 8px 10px 30px 20px rgba(200, 193, 193, 0.5);
   }
@@ -259,7 +261,6 @@
     border: none !important;
   }
   .btn-contianer {
-    /* margin-top: 1.5rem; */
     padding: 0 1.5rem 10px 1.5rem;
   }
   .para-contianer {

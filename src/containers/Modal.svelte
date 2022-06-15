@@ -41,8 +41,6 @@
   brauche ich keine ArrayUnion, weil die reco schon in FS da ist.
   Außerdem brauch ich auf Modal die Stene, um die mit dem Objekt
   "recommendation" mitgeschickt zu werden (zeile 40)
-
-
   */
 
   if (user !== null) {
@@ -138,7 +136,7 @@
 <!-- is-active muss eine "Dynamic Class" sein -->
 <div class={modalCSS}>
   <div class="modal-background" on:click={closeModal} />
-  />
+  <!-- /> -->
 
   <div class="modal-card">
     <header class="modal-card-head">
@@ -171,6 +169,7 @@
   @media only screen and (min-width: 350px) {
     .modal-card {
       margin: 0 2rem 0 2rem;
+      margin: var(--top);
     }
   }
   @media only screen and (max-width: 770px) {

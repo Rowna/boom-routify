@@ -3,7 +3,6 @@
   import { getAuth, onAuthStateChanged } from "firebase/auth";
 
   const db = getFirestore();
-
   const fbAuth = getAuth();
   let user = fbAuth.currentUser;
   let fullUserName = "";
@@ -35,13 +34,14 @@
       // .then vornehmen.
       .signOut()
       .then(() => {
-        // location.reload();
+        // beim signout wird die Seite neugeladet
         window.location.href = window.location.href;
         user = fbAuth.currentUser;
         // console.log("Ausgeloggt!");
       })
       .catch((error) => "Konnte nicht ausloggen: " + error.message);
   }
+
 </script>
 
 <!-- svelte-ignore a11y-no-redundant-roles -->
@@ -83,7 +83,7 @@
         <div class="buttons">
           <!-- Desktop Version / If User nicht eingeloggt ist -->
           {#if !fbAuth.currentUser && !logoutButton}
-            <a class="button singup is-primary" href="/signup">
+            <a class="button signup is-primary" href="/signup">
               <strong>Sign up</strong>
             </a>
             <a href="/login" class="button is-light">Log In</a>
@@ -110,8 +110,10 @@
 </nav>
 
 <style>
-  .singup {
+  .signup {
     background-color: #df485b;
+    width: auto;
+    font-family: inherit;
   }
   .logo {
     font-family: "Sofia";

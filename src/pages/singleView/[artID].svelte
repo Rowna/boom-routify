@@ -94,7 +94,7 @@
  */
 
   // das aktuelle article-doc aus FS holen
-  // für die Einzelansicht: braucht man das richtige getDoc(articleRef).then().catch();
+  // für die Einzelansicht: brauchtrecAlreadyWritten man das richtige getDoc(articleRef).then().catch();
 
   const articleRef = doc(db, "articles", $params.artID);
   getDoc(articleRef)

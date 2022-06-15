@@ -5,14 +5,11 @@
 <div class="card-footer">
   <div class="card-footer-item kunden-container">
     <div class="card-footer-item person-container title is-5">
-      {rec.username}<br />
-      <p class="stars subtitle is-4">
-        {rec.rating}
-      </p>
+      {rec.username}
+      <br />
+      <p class="stars subtitle is-4">{rec.rating}</p>
     </div>
-    <!-- Hier kommen die Sterne hin, die otto Wohlgemut für diesen Artikle vergeben hat -->
-    <!-- <div class="sterne">Hier kommen die Sterne!</div> -->
-
+    
     <div class="card-footer-item text-container subtitle is-5">
       {rec.text}
     </div>

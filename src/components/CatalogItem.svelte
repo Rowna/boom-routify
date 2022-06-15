@@ -35,7 +35,7 @@
 
   let user = fbAuth.currentUser;
   let cartImage = isInCart() ? "shopping-cart-filled" : "shopping-cart";
-  console.log("CartImage: " + cartImage)
+  // console.log("CartImage: " + cartImage)
   
   async function addToCartHandler() {
     // Firestore-Pfad auf den richtigen Cart festlegen:
@@ -139,10 +139,15 @@
     <div class="media-content">
       <p class="title is-3">{article.title}</p>
     </div>
+
+    <div>
+      <p class="subtitle is-5 mc">{article.desc}</p>
+    </div>
+
     <br />
     <div class="content">
       <p class="subtitle is-5">
-        Price: {article.price} €
+        Price: <strong>{article.price}</strong> €
       </p>
     </div>
   </div>

@@ -1,7 +1,7 @@
 <script>
 </script>
 
-<div class="base-container">
+<div class="hero-base-container">
   <!-- Image fürs Handy -->
   <div class="img-container">
     <img class="img" src="images/1.jpeg" alt="Prince" />
@@ -31,7 +31,9 @@
     </p>
 
     <!-- Button -->
-      <a class="button is-primary" href="/catalog">Let's shop</a>
+    <div class="h-btn">
+      <a class="button is-primary letsshop" href="/catalog">Let's shop</a>
+    </div>
   </div>
 </div>
 
@@ -76,7 +78,7 @@
   }
 
   @media only screen and (min-width: 1024px) {
-    .base-container {
+    .hero-base-container {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -116,17 +118,17 @@
     .subtitle {
       position: relative;
     }
-    .is-primary {
+    .letsshop {
       width: 90%;
     }
   }
-  .is-primary {
+  .letsshop {
     background-color: #df485b;
     font-family: "Sofia";
     font-size: 1.3rem;
     width: 100%;
     margin: 5rem 0 1rem 0;
     border-radius: 10px;
+    justify-content: center;
   }
-
 </style>
