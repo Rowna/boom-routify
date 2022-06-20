@@ -2,13 +2,14 @@
   import Hero from "../components/Hero.svelte";
 
   import { onDestroy } from "svelte";
-  import { app } from "../stores/app";
+  import { UserStore } from "../stores/user";
 
   let showSignup;
   let showLogin;
   let unsubscribe;
   
   // Überprüfen ob app wichtig ist ..
+  /*
   unsubscribe = app.subscribe((app) => {
     showSignup = app.showSignup;
     showLogin = app.showLogin;
@@ -19,6 +20,7 @@
       unsubscribe();
     }
   });
+  */
 </script>
 
 <!-- <div class="landingpage__container"> -->

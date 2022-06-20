@@ -1,47 +1,31 @@
 <script>
   import { doc, getDoc, getFirestore } from "firebase/firestore";
   import { getAuth, onAuthStateChanged } from "firebase/auth";
+  import { UserStore } from "../stores/user";
+  import { onDestroy } from "svelte/internal";
+  import { redirect } from "@roxi/routify";
+
+  let myCurrentUser = null;
+
+  const unsubscribe = UserStore.subscribe((currentUser) => {
+    myCurrentUser = { ...currentUser };
+  });
 
   const db = getFirestore();
   const fbAuth = getAuth();
-  let user = fbAuth.currentUser;
+
+  // let user = fbAuth.currentUser;
   let fullUserName = "";
   let logoutButton = false;
 
-  // wenn sich zb auf der login-page oder der signup-page der Auth-Status aendert ...
-  onAuthStateChanged(fbAuth, (fbUser) => {
-    user = fbUser;
-
-    // Falls der user neu eingeloggt ist ...
-    if (fbUser !== null) {
-      // wahren Benutzernamen aus '/firestore/users/$app.user.id' holen
-      getDoc(doc(db, `users/${user.uid}`))
-        .then((snapshot) => {
-          fullUserName = snapshot.data().name;
-          console.log(fullUserName);
-        })
-        .catch((error) => "Konnte den Username nicht laden:" + error.message);
-    } else {
-      user = null; // wird schon in Z.30 geklaert.
-      console.log("User is signed out! ");
-    }
-  });
-
   function logoutHandler() {
-    logoutButton = true;
-    fbAuth
-      // ist ASYNCHRON, d.h. die noetigen anpassungen im
-      // .then vornehmen.
-      .signOut()
-      .then(() => {
-        // beim signout wird die Seite neugeladet
-        window.location.href = window.location.href;
-        user = fbAuth.currentUser;
-        // console.log("Ausgeloggt!");
-      })
-      .catch((error) => "Konnte nicht ausloggen: " + error.message);
+    myCurrentUser = null;
+    // UserStore updaten!
+    UserStore.set(myCurrentUser);
+    $redirect("/");
+    window.location.href = window.location.href;
+    console.log("Ausgeloggt!");
   }
-
 </script>
 
 <!-- svelte-ignore a11y-no-redundant-roles -->
@@ -49,7 +33,19 @@
   <div class="navbar-brand navbar-container">
     <a class="navbar-item logo" href="/">BOOM</a>
     <!-- Mobile Version / If User nicht eingeloggt -->
-    {#if !fbAuth.currentUser && !logoutButton}
+    {#if myCurrentUser.token.length > 0}
+      <div class="navbar-item nav-itm">
+        <div class="navbar-end">
+          <a class="navbar-btn button is-white" href="/cart">Cart</a>
+          <div class="select is-white">
+            <select class="sel">
+              <option>{myCurrentUser.userName}</option>
+              <option on:click={logoutHandler}>Logout</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    {:else}
       <a
         href="/login"
         role="button"
@@ -62,18 +58,6 @@
         <span aria-hidden="true" />
         <span aria-hidden="true" />
       </a>
-    {:else}
-      <div class="navbar-item nav-itm">
-        <div class="navbar-end">
-          <a class="navbar-btn button is-white" href="/cart">Cart</a>
-          <div class="select is-white">
-            <select class="sel">
-              <option>{fullUserName}</option>
-              <option on:click={logoutHandler}>Logout</option>
-            </select>
-          </div>
-        </div>
-      </div>
     {/if}
   </div>
 
@@ -82,12 +66,7 @@
       <div class="navbar-item">
         <div class="buttons">
           <!-- Desktop Version / If User nicht eingeloggt ist -->
-          {#if !fbAuth.currentUser && !logoutButton}
-            <a class="button signup is-primary" href="/signup">
-              <strong>Sign up</strong>
-            </a>
-            <a href="/login" class="button is-light">Log In</a>
-          {:else}
+          {#if myCurrentUser.token.length > 0}
             <div class="header-menu">
               <div>
                 <a class="button is-white" href="/cart">Shopping Cart</a>
@@ -97,11 +76,16 @@
               </a>
               <div class="select is-white">
                 <select class="sel">
-                  <option>{fullUserName}</option>
+                  <option>{myCurrentUser.userName}</option>
                   <option on:click={logoutHandler}>Logout</option>
                 </select>
               </div>
             </div>
+          {:else}
+            <a class="button signup is-primary" href="/signup">
+              <strong>Sign up</strong>
+            </a>
+            <a href="/login" class="button is-light">Log In</a>
           {/if}
         </div>
       </div>
@@ -138,6 +122,7 @@
   }
   .navbar-container {
     margin-left: 2rem;
+    justify-content: space-between !important;
   }
 
   @media only screen and (max-width: 1024px) {
@@ -146,6 +131,7 @@
       margin-left: auto;
     }
   }
+  /* min-width bedeutet: Ab 1023px wird es gelten */
   @media only screen and (min-width: 1023px) {
     .nav-itm {
       display: none;

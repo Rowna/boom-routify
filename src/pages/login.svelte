@@ -1,8 +1,18 @@
 <script>
   import { redirect } from "@roxi/routify";
+  import { UserStore } from "../stores/user";
+  import { onDestroy } from "svelte/internal";
   import axios from "axios";
 
   let userInput = { emailInput: "", passWordInput: "" };
+
+  let myCurrentUser = null;
+
+  // Die aktuellen Werte aus dem UserStore werden in die lokale Variable
+  // myCurrentUser übertragen und UserStore wird abonniert
+  const unsubscribe = UserStore.subscribe((currentUser) => {
+    myCurrentUser = { ...currentUser };
+  });
 
   function handleSubmit() {
     axios
@@ -15,6 +25,11 @@
       // Der Server hat einen Response zurückgegeben nach findOne()
       .then((res) => res.data)
       .then((data) => {
+        // Userdaten vom Server in den Store uebertragen:
+        myCurrentUser = { ...data.user };
+        UserStore.set(myCurrentUser);
+
+        // Catalog automatisch aufrufen
         $redirect("/catalog");
         console.log(data);
         // storeCurrentUserToReduxStoreToLogin(data.user);
@@ -24,6 +39,8 @@
         alert(error.response.data.message);
       });
   }
+
+  onDestroy(unsubscribe);
 </script>
 
 <div class="base-container card">

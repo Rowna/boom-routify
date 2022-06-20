@@ -1,11 +1,13 @@
 <script>
-  import { app } from "./stores/app";
+  import { UserStore } from "./stores/user";
   import firebase_config from "./server/firebase_config";
   import { initializeApp } from "firebase/app";
   import { Router } from "@roxi/routify";
   import { routes } from "../.routify/routes";
 
-  app.subscribe(() => {});
+  // UserStore.subscribe(() => {});
+
+  
 
   const fb = initializeApp(firebase_config);
 </script>
