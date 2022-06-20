@@ -1,10 +1,20 @@
 <script>
   import { redirect } from "@roxi/routify";
   import axios from "axios";
+  import { UserStore } from "../stores/user";
+  import { onDestroy } from "svelte/internal";
 
   let userInput = { fullNameInput: "", emailInput: "", passWordInput: "" };
   let errors = { fullName: "", mail: "", passWord: "" };
   let isValid = false;
+
+  let myCurrentUser = null;
+
+  // Die aktuellen Werte aus dem UserStore werden in die lokale Variable
+  // myCurrentUser übertragen und UserStore wird abonniert
+  const unsubscribe = UserStore.subscribe((currentUser) => {
+    myCurrentUser = { ...currentUser };
+  });
 
   // Name Validierung durch RegEx
   function nameValid(pFullname) {
@@ -63,11 +73,15 @@
         email: userInput.emailInput,
         password: userInput.passWordInput,
         userName: userInput.fullNameInput,
-        phoneNumber: "1234567890",
       })
       // der Server gibt zurück einen Response
       .then((res) => res.data)
       .then((data) => {
+        // Userdaten vom Server in den Store uebertragen:
+        myCurrentUser = { ...data.user };
+        console.log(data.user)
+        console.log(myCurrentUser)
+        UserStore.set(myCurrentUser);
         $redirect("/catalog");
         alert(data.message);
       });
@@ -110,19 +124,9 @@
           "Uh oh! Konnte keinen neuen Nutzer anlegen: " + err.message
         );
       });
-
-    // Jetzt kann ich auf jeder Page und in jedem Komponent testen, ob der User
-    // eingeloggt ist oder nicht:
-
-    // Dieser Schritt ist nicht nötig, weil:
-    // Wenn ( $app.user) erscheint der {fullUserName} ,
-    // UND wen nicht erscheinen die Buttons Signup & Log In
-    // if( $app.user)
-    //    // User ist eingeloggt
-    // else
-    //    // User ist Gast
   */
   }
+  onDestroy(unsubscribe);
 </script>
 
 <div class="base-container">
