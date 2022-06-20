@@ -1,31 +1,29 @@
 <script>
-  import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
   import { redirect } from "@roxi/routify";
+  import axios from "axios";
 
-  const fbAuth = getAuth();
   let userInput = { emailInput: "", passWordInput: "" };
-  let fbUser = {};
 
   function handleSubmit() {
-    // email und passwort werden an firebase geschickt.
-    signInWithEmailAndPassword(
-      fbAuth,
-      userInput.emailInput,
-      userInput.passWordInput
-    )
-      .then((fbCredentials) => {
-        fbUser = fbCredentials.user;
-        // app.set({ user: fbUser });
-
-        $redirect("/catalog");
+    axios
+      .post("http://localhost:4000/user", {
+        type: "login",
+        email: userInput.emailInput,
+        password: userInput.passWordInput,
       })
-      .catch((err) => {
-        console.log("Uh oh! Konnte nicht einloggen: " + err.message);
+      // then holt mir die data aus axios und dieser antwort "Payload" habe ich an das nächste then() weitergegeben
+      // Der Server hat einen Response zurückgegeben nach findOne()
+      .then((res) => res.data)
+      .then((data) => {
+        $redirect("/catalog");
+        console.log(data);
+        // storeCurrentUserToReduxStoreToLogin(data.user);
+      })
+      .catch((error) => {
+        // message vom Server, wenn die daten im Server nicht gefunden werden
+        alert(error.response.data.message);
       });
-
-    console.log("Logging in!");
   }
-  
 </script>
 
 <div class="base-container card">

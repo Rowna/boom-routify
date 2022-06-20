@@ -1,13 +1,6 @@
 <script>
-  import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-  import { doc, setDoc, getFirestore } from "firebase/firestore";
   import { redirect } from "@roxi/routify";
   import axios from "axios";
-
-  // get a connector to firebase Auth
-  const fbAuth = getAuth();
-  const db = getFirestore();
-  let fbUser = fbAuth.currentUser;
 
   let userInput = { fullNameInput: "", emailInput: "", passWordInput: "" };
   let errors = { fullName: "", mail: "", passWord: "" };
