@@ -1,13 +1,9 @@
 <script>
   import { redirect } from "@roxi/routify";
+  import axios from "axios";
+  import { UserStore } from "../stores/user";
 
-  import {
-    getFirestore,
-    doc,
-    getDoc,
-    updateDoc,
-    deleteField,
-  } from "firebase/firestore";
+  import { getFirestore, updateDoc, deleteField } from "firebase/firestore";
 
   import CartItem from "../components/CartItem.svelte";
   import ModalBuy from "../containers/ModalBuy.svelte";
@@ -18,15 +14,18 @@
   const fbAuth = getAuth();
 
   let modalVisible = false;
+  let articles = [];
+  let subtotal = 0;
 
-  // Wichtig, um zu wissen ob der User null ist!
-  let user = fbAuth.currentUser;
-  if (user !== null) {
-    console.log(`Habe die Email ${user.email}`);
-  } else {
-    console.log("Bin gerade nicht eingeloggt.");
-  }
+  let myCurrentUser = null;
 
+  // Die aktuellen Werte aus dem UserStore werden in die lokale Variable
+  // myCurrentUser übertragen und UserStore wird abonniert
+  const unsubscribe = UserStore.subscribe((currentUser) => {
+    myCurrentUser = { ...currentUser };
+  });
+
+  /*
   // Wenn sich der Login-Status aendert ...
   onAuthStateChanged(fbAuth, (fbUser) => {
     // ... und der user ausgeloggt ist ...
@@ -34,8 +33,7 @@
       $redirect("/catalog");
     }
   });
-
-  let subtotal = 0;
+  */
 
   function getSubTotal(articles) {
     // Einzelpreise addieren, bevor ich ihre Summe zu subTotal addiere.
@@ -54,50 +52,46 @@
     // subtotal += amount;
   }
 
-  /*
-    SPEC:
-    Als erstes brauche ich die Artikel-IDs aus dem cart-array des aktuellen 
-    eingeloggten Benutzers. das geht in folgende Abfrage:
-
-    // eigene Variablen zum Abspeichern der Firebase-Daten
-    const cartIDs = [];
-
-    cartDoc = doc(db, "users", "cart")
-    // die IDs aus Firestore herausholen. Achtung Asynchron!
-    getDoc(...): Promise(payload)
-
-    Dann brauche ich die docs aus der FB-Collection 'articles', die zu 
-    diesen IDs passen.  
-    .then: getDoc(): Promise(payload)
-
-    Dann baue ich mit Hilfe dieser Artikel den Cart auf.
-    .then: 
-
-    All dies muss in einer .then()-Kette passieren, weil alles asynchron ist!
-  */
-
   // Ich glaube, die sind ähnlich user ist auch = fbAuth.currentUser
-  const userDoc = doc(db, "users", user.uid);
-  const userRef = doc(db, "users", fbAuth.currentUser.uid);
+  // const userDoc = doc(db, "users", user.uid);
+  // const userRef = doc(db, "users", fbAuth.currentUser.uid);
 
   /* 
-   promise in Svelte ist ein reactive-Status-Variable wegen "let" und "="
-   und damit kann ich in Markup mit `{#await promise}` weiterarbeiten!
-   Siehe "await Block" in der Svelte.dev Dokumentation
-   Das letzte Promise aus der .then()-Reihe wird in der Variable "promise"
-   gespeichert und dieses gespeicherte "promise" benutzt dann
-   {#await} im Markup in Svelte.
+  //  promise in Svelte ist ein reactive-Status-Variable wegen "let" und "="
+  //  und damit kann ich in Markup mit `{#await promise}` weiterarbeiten!
+  //  Siehe "await Block" in der Svelte.dev Dokumentation
+  //  Das letzte Promise aus der .then()-Reihe wird in der Variable "promise"
+  //  gespeichert und dieses gespeicherte "promise" benutzt dann
+  //  {#await} im Markup in Svelte.
   */
+  /*
+
+  // Wir holen uns dir das vollstaendige User-Document des eingeloggten Users.
   let promise = getDoc(userDoc)
+    // wir bekommen die Daten
     .then((snapshot) => {
-      // console.log(snapshot.data().cart);
+      // wir holen uns die aktuellen Cart-Artikel ...
       const articles = snapshot.data().cart;
-      // berechnet das aktuelle Sub-Total
+      // ... und koennen jetzt das aktuelle Sub-Total berechnen
       getSubTotal(articles);
-      // gibt die articles fuer {#await} zurueck.
+      // jetzt geben wir die Cart-Artikel fuer {#await} zurueck.
+      // {#await} wertet das 'promise' aus Z.66 aus!
       return articles;
     })
+    // Falls es mit der Abfrage daneben gegangen ist ...
     .catch((error) => console.error("The Error is: " + error.message));
+   */
+  let promise = axios
+    .get(
+      "http://localhost:4000/getArticlesFromMyCart?userId=" +
+        myCurrentUser.userId
+    )
+    .then((res) => res.data)
+    .then((data) => {
+      articles = [...data.shCartItems];
+      subtotal = getSubTotal([...data.shCartItems]);
+      return articles;
+    });
 
   // Die Cart leeren.
   function clearCartHandler() {
@@ -201,7 +195,8 @@
           </div>
           <div class="box box2">
             <a class="button is-primary ce-gallery-btn" href="/catalog"
-              >Back to Gallery</a>
+              >Back to Gallery</a
+            >
           </div>
           <!-- Hier endet CartEmpty-Component in React -->
         {/if}

@@ -3,6 +3,7 @@
   // import singleView from "../pages/singleView/[artID].svelte";
   import { onDestroy } from "svelte/internal";
   import { UserStore } from "../stores/user";
+  import axios from "axios";
 
   import Platzhalter from "../containers/Platzhalter.svelte";
 
@@ -48,13 +49,7 @@
   // console.log("CartImage: " + cartImage)
 
   async function addToCartHandler() {
-    // Firestore-Pfad auf den richtigen Cart festlegen:
-    //     db ist svelte-bulma-Firestore (vgl. z.13)
-    //     users ist die collection, die ich brauche
-    //     fbAuth.currentUser.uid ist die Dokument-ID, die ich brauche
-    // Es ergibt sich also folgender Pfad "users/${fbAuth.currentUser.uid}"
-    const userRef = doc(db, "users", fbAuth.currentUser.uid);
-    // console.log(userRef);
+    //  const userRef = doc(db, "users", fbAuth.currentUser.uid);
 
     // Update des Cart-Icons
     // wenn "filled" in cartImage tatsaechlich gefunden wird ...
@@ -68,6 +63,46 @@
       price: article.price,
       img: article.img,
     };
+
+    if (cartImage.indexOf("filled") >= 0) {
+      axios
+        .get(
+          // abfragen "removeFromCart" where cartId =
+          "http://localhost:4000/removeFromCart?cartId=" +
+            cartItem.id +
+            "&userId=" +
+            myCurrentUser.userId
+        )
+        .then((res) => res.data)
+        .then(() => {
+          cartImage = "shopping-cart";
+          // setCartImage("shopping-cart.png");
+        })
+        .catch((error) => {
+          console.log("Error:" + error.message);
+        });
+    } else {
+      axios
+        .post("http://localhost:4000/addToCart", {
+          // key: in body request zum server
+          // value: catItem im Client Frontend
+          cartItem: cartItem,
+          userId: myCurrentUser.userId,
+        })
+        // wenn ich eine Payload vom Server zurück bekomme, geht es
+        // hier weiter.
+        .then((res) => res.data)
+        .then(() => {
+          // Cart-Icon updaten
+          cartImage = "shopping-cart-filled";
+          // setCartImage("shopping-cart-filled.png");
+        })
+        .catch((error) => {
+          console.log("Error:" + error.message);
+        });
+    }
+
+    /* 
 
     if (cartImage.indexOf("filled") >= 0) {
       // eine article.id aus dem "cart"-Array entfernen
@@ -90,12 +125,15 @@
       cartImage = "shopping-cart-filled";
       console.log("added to Shop!");
     }
+    */
   }
 
   async function addToFavoritesHandler() {
     console.log("added to Favorites!");
     modalVisible = true;
   }
+
+  onDestroy(unsubscribe);
 </script>
 
 <div class="catalog-items card">

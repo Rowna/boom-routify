@@ -24,7 +24,7 @@
 
   let qty = 1;
 
-  const userRef = doc(db, "users", fbAuth.currentUser.uid);
+  // const userRef = doc(db, "users", fbAuth.currentUser.uid);
   let cartItem = {
     id: article.id,
     title: article.title,
@@ -47,9 +47,11 @@
 
   function removeArtikelHandler() {
     console.log("Article Removed!");
+    /* 
     updateDoc(userRef, {
       cart: arrayRemove(cartItem),
     });
+    */
   }
 </script>
 
@@ -84,14 +86,12 @@
     </div>
 
     <div class="card-footer-item article-amount">
-      
       <div class="card-header-title title is-4 amount card-header">
         Preis:
         <p class="subtitle card-header-title is-5 price-a">
           {article.price} €
         </p>
       </div>
-
 
       <div class="card-header article-qty-container">
         <p class="article-qty card-header-title subtitle is-5 ci-article-qty">
@@ -110,7 +110,7 @@
               src="./images/minus.png"
               alt="pic"
             />
-        </div>
+          </div>
 
           <!-- Quantity ab 1 -->
           <div class="card-header-title">
@@ -129,7 +129,7 @@
               src="./images/plus.png"
               alt="pic"
             />
-        </div>
+          </div>
         </div>
       </div>
     </div>
@@ -138,9 +138,7 @@
   <div class="card-footer">
     <!-- svelte-ignore a11y-missing-attribute -->
     <!-- Routing: <a> ist gleich wie <Link> in React -->
-    <a 
-      href="/catalog" 
-      class="button card-footer-item ci-gallery-btn is-primary"
+    <a href="/catalog" class="button card-footer-item ci-gallery-btn is-primary"
       >To Gallery
     </a>
     <a
@@ -237,8 +235,8 @@
     color: rgb(28, 26, 26) !important;
     text-decoration: none !important;
     box-shadow: rgba(123, 123, 179, 0.25) 0px 50px 100px -20px,
-    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
-    rgba(87, 132, 177, 0.35) 0px -2px 6px 0px inset !important;
+      rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+      rgba(87, 132, 177, 0.35) 0px -2px 6px 0px inset !important;
   }
   .delete-btn:hover {
     cursor: pointer;
@@ -247,9 +245,9 @@
   }
   .ci-gallery-btn:hover,
   .delete-btn:hover {
-  border: solid 1.8px #cc0b32 !important;
-  color: #cc0b32 !important;
-}
+    border: solid 1.8px #cc0b32 !important;
+    color: #cc0b32 !important;
+  }
   /* .ci-gallery-btn {
     background-color: #b14b60;
   } */
@@ -268,7 +266,7 @@
     color: rgb(130, 152, 145);
   }
 
-/* 
+  /* 
   .ci-article-qty {
   margin-bottom: 0 !important;
 } */
