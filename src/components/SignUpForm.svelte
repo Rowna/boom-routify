@@ -2,6 +2,7 @@
   import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
   import { doc, setDoc, getFirestore } from "firebase/firestore";
   import { redirect } from "@roxi/routify";
+  import axios from "axios";
 
   // get a connector to firebase Auth
   const fbAuth = getAuth();
@@ -31,9 +32,8 @@
     return isLongEnough && passwordRegEx.test(pPassWord);
   }
 
-  // Form-Validierung
-  function handelValidation(e) {
-    e.preventDefault();
+  function submitHandler() {
+    // Felder Validieren!
     let nameIsValid = false;
     let mailIsValid = false;
     let passwordIsValid = false;
@@ -59,20 +59,27 @@
       errors.passWord = "";
     }
     if (nameIsValid && mailIsValid && passwordIsValid) {
+      console.log("isValid = true!");
       isValid = true;
     }
-  }
+    // axios schickt eine Request an den Server.js
+    // body dieser Request: {type, email, password...}
+    axios
+      .post("http://localhost:4000/user", {
+        type: "signup",
+        email: userInput.emailInput,
+        password: userInput.passWordInput,
+        userName: userInput.fullNameInput,
+        phoneNumber: "1234567890",
+      })
+      // der Server gibt zurück einen Response
+      .then((res) => res.data)
+      .then((data) => {
+        $redirect("/catalog");
+        alert(data.message);
+      });
 
-  function handleSubmit(data) {
-    /* ABLAUF:
-    // email und passwort werden aus dem Formular geholt.
-    // email und passwort werden an firebase geschickt.
-    //    --> firebase richtet einen neuen user in der Auth-Datenbank ein
-    //    --> firebase erstellt einen sog. Token, in dem die E-Mail und die
-    //        user-ID drinstehen, und zwer in einem Objekt, das "user" heisst.
-    //   <<< firebase schickt den Token zurueck an die App.
-    */
-
+    /*
     createUserWithEmailAndPassword(
       fbAuth,
       userInput.emailInput,
@@ -121,11 +128,12 @@
     //    // User ist eingeloggt
     // else
     //    // User ist Gast
+  */
   }
 </script>
 
 <div class="base-container">
-  <div on:submit|preventDefault={handleSubmit} class="form">
+  <div on:submit|preventDefault={submitHandler} class="form">
     <h1 class="signup-boom-title is-medium">BOOM | Sign Up</h1>
     <div class="form-container">
       <label for="name">Full Name</label>
@@ -146,7 +154,7 @@
         class="input is-rounded"
         placeholder="Your E-Mail-Adress"
       />
-      <p class="error">{errors.mail}</p>
+      <p class="error-message">{errors.mail}</p>
 
       <label for="password">Password</label>
       <input
@@ -156,26 +164,19 @@
         class="input is-rounded"
         placeholder="A Strong Password"
       />
-      <p class="error">{errors.passWord}</p>
+      <p class="error-message">{errors.passWord}</p>
     </div>
   </div>
   <div class="btn-contianer">
-    {#if !isValid}
-      <button
-        on:click|preventDefault={handelValidation}
-        class="button is-rounded is-primary check">Check Entries</button
-      >
-    {:else}
-      <button
-        on:click|preventDefault={handleSubmit}
-        class="button is-rounded is-primary sign-up">Sign Up</button
-      >
-    {/if}
-
+    <button
+      on:click|preventDefault={submitHandler}
+      class="button is-rounded is-primary sign-up">Sign Up</button
+    >
     <div class="para-contianer">
       <a href="/login" class="para__title">Already have an Account?</a>
     </div>
   </div>
+  <div />
 </div>
 
 <style>
@@ -237,7 +238,7 @@
   }
   .error-message {
     padding: 5px calc(calc(0.75em - 2px) + 0.375em);
-    color: red;
+    color: red !important;
     font-size: 14px;
     margin-top: 5px;
   }
@@ -246,15 +247,9 @@
     color: rgb(31, 28, 28);
     width: 100%;
   }
-  .check {
-    border: #db4e61 2px solid;
-    justify-content: center;
-    font-size: 1.1rem;
-    background-color: #f8bbbb;
-    box-shadow: 8px 10px 30px 20px rgba(200, 193, 193, 0.5);
-  }
   .sign-up {
     box-shadow: #9c9898;
+    justify-content: center;
     background-color: rgb(116, 195, 116) !important;
   }
   .input {
