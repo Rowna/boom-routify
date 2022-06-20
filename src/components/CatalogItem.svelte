@@ -1,7 +1,9 @@
 <script>
   import { getAuth } from "firebase/auth";
   // import singleView from "../pages/singleView/[artID].svelte";
-  // import { onDestroy } from "svelte";
+  import { onDestroy } from "svelte/internal";
+  import { UserStore } from "../stores/user";
+
   import Platzhalter from "../containers/Platzhalter.svelte";
 
   import {
@@ -14,13 +16,21 @@
 
   function isInCart() {
     for (let el of userCart) {
-      if (el.id === article.id) return true;  
+      if (el.id === article.id) return true;
     }
     return false;
   }
 
   const fbAuth = getAuth();
   const db = getFirestore();
+
+  let myCurrentUser = null;
+
+  // Die aktuellen Werte aus dem UserStore werden in die lokale Variable
+  // myCurrentUser übertragen und UserStore wird abonniert
+  const unsubscribe = UserStore.subscribe((currentUser) => {
+    myCurrentUser = { ...currentUser };
+  });
 
   // "export let" bedeutet: Diese Variable ist ein "Prop".
   // Das leere Objekt ist der default-Wert, D.H. Wenn nix ankommt,
@@ -33,10 +43,10 @@
 
   let modalVisible = false;
 
-  let user = fbAuth.currentUser;
+  // let user = fbAuth.currentUser;
   let cartImage = isInCart() ? "shopping-cart-filled" : "shopping-cart";
   // console.log("CartImage: " + cartImage)
-  
+
   async function addToCartHandler() {
     // Firestore-Pfad auf den richtigen Cart festlegen:
     //     db ist svelte-bulma-Firestore (vgl. z.13)
@@ -109,7 +119,7 @@
     </figure>
 
     <footer class="card-footer">
-      {#if user !== null}
+      {#if myCurrentUser.token.length > 0}
         <!-- svelte-ignore a11y-missing-attribute -->
         <a class="card-footer-item" on:click={() => addToCartHandler()}>
           <img

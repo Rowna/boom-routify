@@ -2,85 +2,54 @@
   import CatalogItem from "../components/CatalogItem.svelte";
   import { getAuth } from "firebase/auth";
 
-  // // firestore-hook importieren
-  import { 
+  import { redirect } from "@roxi/routify";
+  import axios from "axios";
+
+  import {
     collection,
-     getDoc,
-     getDocs,
-     doc, 
-     getFirestore 
-    } from "firebase/firestore";
+    getDoc,
+    getDocs,
+    doc,
+    getFirestore,
+  } from "firebase/firestore";
 
   const db = getFirestore();
   const fbAuth = getAuth();
-  const user = fbAuth.currentUser;
+  // const user = fbAuth.currentUser;
 
   let docs = [];
   let userCart = [];
 
-  if (user !== null) {
-    console.log(`Habe die Email ${user.email}`);
-  } else {
-    console.log("Bin gerade nicht eingeloggt.");
-  }
-  /* 
-    1. Schon beim Aufbau der Catalog-Seite muss der Cart des Users 
-    geladen werden.
-    2. Dann muss bei jedem Catalog Item geprueft werden, ob dieses 
-    Item in der Cart Liste steht. (Fuer jedes Catalog Item die Cart
-    Liste als Prop mitschicken.)
-    3. Wenn es drinsteht, muss das Icon auf "filled" gesetzt werden. 
-  */
+  // Ich brauche das Cart, um bei jedem einzelnen Katalogartikel zu bestimmen,
+  // ob er schon im Cart ist oder nicht.
+  // Dafuer uebergebe ich das Cart als Prop an jedes einzelne <CatalogItem>
+  // if (user) {
+  //   // Der User ist Null, darf aber keinen Cart haben, weil der user keinen uid hat
+  //   const userRef = doc(db, "users", user.uid);
 
- 
- // Ich brauche das Cart, um bei jedem einzelnen Katalogartikel zu bestimmen,
- // ob er schon im Cart ist oder nicht.
- // Dafuer uebergebe ich das Cart als Prop an jedes einzelne <CatalogItem>
-  if (user) { // Der User ist Null, darf aber keinen Cart haben, weil der user keinen uid hat
-    const userRef = doc(db, "users", user.uid);
- 
-    getDoc(userRef)
-    .then((docsnapshot) => {
-      userCart = [ ...docsnapshot.data().cart ];
+  //   getDoc(userRef)
+  //     .then((docsnapshot) => {
+  //       userCart = [...docsnapshot.data().cart];
+  //     })
+  //     .catch((error) => {
+  //       console.log("So eine Scheisse! " + error.message);
+  //       window.location.href = window.location.href;
+  //     });
+  // }
+
+  axios
+    // etwas aus dem Server auslesen/abfragen ".get()"
+    .get("http://localhost:4000/getArticles")
+    .then((res) => res.data)
+    // die Daten aus dem Server holen
+    .then((data) => {
+      docs = data.articles;
+      $redirect("/catalog");
     })
-    .catch((error) => {
-      console.log("So eine Scheisse! " + error.message);
-      window.location.href = window.location.href;
+    .catch((err) => {
+      console.log("The Error is: " + err.response.data.message);
     });
- }
-
-  // Connector zur "articles"-Collecion erstellen mit Hilfe des
-  // firestore-connectors in $app
-  const fbArticles = collection(db, "articles");
-
-  // Artikel-"Zip"aus Firestore downloaden;
-  // der Snapshot ist wie eine Zip-Datei, die ich erst entpacken muss,
-  // um weite mit den Daten arbeiten zu koennen.
-  // Diese Aktion ist ASYNCHRON!, deshalb muss ich mit Promises weiterarbeiten
-  getDocs(fbArticles)
-    .then((snapshot) => {
-      // console.log("bin im Promise!");
-      let theArticles = [];
-      snapshot.docs.forEach((doc) => {
-        // die Daten aud dem Firebase-"document" , die drin stehen.
-        theArticles.push({ id: doc.id, ...doc.data() });
-      });
-      docs = theArticles;
-      // console.log(theArticles);
-    })
-    .catch((error) => console.error("The Error is: " + error.message));
 </script>
-
-<!-- Notification zur Info wenn der User sich ausloggt wird rot bzw. einloggt wird orang -->
-{#if user !== null}
-  <div class="notification is-warning">
-    <p>Bin eingeloggt als {user.email}</p>
-  </div>
-{:else}
-  <div class="notification is-danger">
-    <p>Hat mit dem Einloggen nicht geklappt!</p>
-  </div>
-{/if}
 
 <div class="catalog">
   <div class="catalog-title">
@@ -90,7 +59,8 @@
 
   <div class="catalog-container">
     <!-- Listenschleife mit {#each} in Svelte -->
-    {#each docs as article (article.id)}
+    <!-- {#each docs as article (article.id) } -->
+    {#each docs as article}
       <!-- 
       { article } ist als Prop für das <CatalogItem>-Component definiert, 
       um es in <CatalogItem> benutzen zu können, muss in <CatalogItem> 
