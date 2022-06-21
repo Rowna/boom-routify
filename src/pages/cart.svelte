@@ -2,16 +2,10 @@
   import { redirect } from "@roxi/routify";
   import axios from "axios";
   import { UserStore } from "../stores/user";
-
-  import { getFirestore, updateDoc, deleteField } from "firebase/firestore";
+  import { onDestroy } from "svelte/internal";
 
   import CartItem from "../components/CartItem.svelte";
   import ModalBuy from "../containers/ModalBuy.svelte";
-
-  import { getAuth, onAuthStateChanged } from "firebase/auth";
-
-  const db = getFirestore();
-  const fbAuth = getAuth();
 
   let modalVisible = false;
   let articles = [];
@@ -24,16 +18,6 @@
   const unsubscribe = UserStore.subscribe((currentUser) => {
     myCurrentUser = { ...currentUser };
   });
-
-  /*
-  // Wenn sich der Login-Status aendert ...
-  onAuthStateChanged(fbAuth, (fbUser) => {
-    // ... und der user ausgeloggt ist ...
-    if (!fbUser) {
-      $redirect("/catalog");
-    }
-  });
-  */
 
   function getSubTotal(articles) {
     // Einzelpreise addieren, bevor ich ihre Summe zu subTotal addiere.
@@ -51,36 +35,14 @@
     subtotal = Math.round((subtotal + amount + Number.EPSILON) * 100) / 100;
     // subtotal += amount;
   }
-
-  // Ich glaube, die sind ähnlich user ist auch = fbAuth.currentUser
-  // const userDoc = doc(db, "users", user.uid);
-  // const userRef = doc(db, "users", fbAuth.currentUser.uid);
-
   /* 
-  //  promise in Svelte ist ein reactive-Status-Variable wegen "let" und "="
-  //  und damit kann ich in Markup mit `{#await promise}` weiterarbeiten!
-  //  Siehe "await Block" in der Svelte.dev Dokumentation
-  //  Das letzte Promise aus der .then()-Reihe wird in der Variable "promise"
-  //  gespeichert und dieses gespeicherte "promise" benutzt dann
-  //  {#await} im Markup in Svelte.
+    //  promise in Svelte ist ein reactive-Status-Variable wegen "let" und "="
+    //  und damit kann ich in Markup mit `{#await promise}` weiterarbeiten!
+    //  Siehe "await Block" in der Svelte.dev Dokumentation
+    //  Das letzte Promise aus der .then()-Reihe wird in der Variable "promise"
+    //  gespeichert und dieses gespeicherte "promise" benutzt dann
+    //  {#await} im Markup in Svelte.
   */
-  /*
-
-  // Wir holen uns dir das vollstaendige User-Document des eingeloggten Users.
-  let promise = getDoc(userDoc)
-    // wir bekommen die Daten
-    .then((snapshot) => {
-      // wir holen uns die aktuellen Cart-Artikel ...
-      const articles = snapshot.data().cart;
-      // ... und koennen jetzt das aktuelle Sub-Total berechnen
-      getSubTotal(articles);
-      // jetzt geben wir die Cart-Artikel fuer {#await} zurueck.
-      // {#await} wertet das 'promise' aus Z.66 aus!
-      return articles;
-    })
-    // Falls es mit der Abfrage daneben gegangen ist ...
-    .catch((error) => console.error("The Error is: " + error.message));
-   */
   let promise = axios
     .get(
       "http://localhost:4000/getArticlesFromMyCart?userId=" +
@@ -89,6 +51,7 @@
     .then((res) => res.data)
     .then((data) => {
       articles = [...data.shCartItems];
+      // console.log(articles[0]._id)
       subtotal = getSubTotal([...data.shCartItems]);
       return articles;
     });
@@ -96,16 +59,24 @@
   // Die Cart leeren.
   function clearCartHandler() {
     console.log("FieldRemove()");
-    updateDoc(userRef, {
-      // cart: [],
-      cart: deleteField(),
-    });
+
+    axios
+      // delete "/cart" at userId "$"{userId}
+      .delete(`http://localhost:4000/cart/${myCurrentUser.userId}`)
+      .then((res) => res.data)
+      .then((data) => {
+        // window.location.href = window.location.href;
+      })
+      .catch((error) => {
+        console.log("Error:" + error.message);
+      });
   }
 
   function executeHandler() {
     modalVisible = true;
     console.log("Gekauft!");
   }
+  onDestroy(unsubscribe);
 </script>
 
 <!-- svelte-ignore missing-declaration -->
@@ -127,7 +98,7 @@
       <div class="articles-container">
         {#if articles && articles.length > 0}
           <!-- svelte-ignore empty-block -->
-          {#each articles as article (article.id)}
+          {#each articles as article}
             <CartItem {article} {getSubUpdate} />
           {/each}
           <!-- Hier beginnt mit CartBox in React  -->

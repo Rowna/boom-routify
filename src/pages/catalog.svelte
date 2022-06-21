@@ -5,37 +5,8 @@
   import { redirect } from "@roxi/routify";
   import axios from "axios";
 
-  import {
-    collection,
-    getDoc,
-    getDocs,
-    doc,
-    getFirestore,
-  } from "firebase/firestore";
-
-  const db = getFirestore();
-  const fbAuth = getAuth();
-  // const user = fbAuth.currentUser;
-
   let docs = [];
   let userCart = [];
-
-  // Ich brauche das Cart, um bei jedem einzelnen Katalogartikel zu bestimmen,
-  // ob er schon im Cart ist oder nicht.
-  // Dafuer uebergebe ich das Cart als Prop an jedes einzelne <CatalogItem>
-  // if (user) {
-  //   // Der User ist Null, darf aber keinen Cart haben, weil der user keinen uid hat
-  //   const userRef = doc(db, "users", user.uid);
-
-  //   getDoc(userRef)
-  //     .then((docsnapshot) => {
-  //       userCart = [...docsnapshot.data().cart];
-  //     })
-  //     .catch((error) => {
-  //       console.log("So eine Scheisse! " + error.message);
-  //       window.location.href = window.location.href;
-  //     });
-  // }
 
   axios
     // etwas aus dem Server auslesen/abfragen ".get()"

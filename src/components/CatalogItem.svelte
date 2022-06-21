@@ -49,15 +49,12 @@
   // console.log("CartImage: " + cartImage)
 
   async function addToCartHandler() {
-    //  const userRef = doc(db, "users", fbAuth.currentUser.uid);
-
     // Update des Cart-Icons
     // wenn "filled" in cartImage tatsaechlich gefunden wird ...
-    /*
     // ein neues Cart-Artikel-Objekt anlegen:
-    */
+
     let cartItem = {
-      id: article.id,
+      _id: article._id,
       title: article.title,
       desc: article.desc,
       price: article.price,
@@ -101,31 +98,6 @@
           console.log("Error:" + error.message);
         });
     }
-
-    /* 
-
-    if (cartImage.indexOf("filled") >= 0) {
-      // eine article.id aus dem "cart"-Array entfernen
-      // const articleRef = doc(db, "users", "cart");
-      // arrayRemove((articleRef), where(article.id, "=", ""))
-      await updateDoc(userRef, {
-        // cart: deleteField(),
-        cart: arrayRemove(cartItem),
-      });
-      // Cart-Icon updaten
-      cartImage = "shopping-cart";
-      console.log("Removed from Shop!");
-      // cart-image sieht "leer" aus
-    } else {
-      await updateDoc(userRef, {
-        cart: arrayUnion(cartItem),
-      });
-
-      // Cart-Icon updaten
-      cartImage = "shopping-cart-filled";
-      console.log("added to Shop!");
-    }
-    */
   }
 
   async function addToFavoritesHandler() {

@@ -28,7 +28,7 @@
         // Userdaten vom Server in den Store uebertragen:
         myCurrentUser = { ...data.user };
         UserStore.set(myCurrentUser);
-
+        // localStorage.setItem("svelteJWT", myCurrentUser.user)
         // Catalog automatisch aufrufen
         $redirect("/catalog");
         console.log(data);

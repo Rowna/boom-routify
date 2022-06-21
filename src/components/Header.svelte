@@ -22,6 +22,7 @@
     myCurrentUser = null;
     // UserStore updaten!
     UserStore.set(myCurrentUser);
+    // localStorage.removeItem("svelteJWT");
     $redirect("/");
     window.location.href = window.location.href;
     console.log("Ausgeloggt!");

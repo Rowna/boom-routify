@@ -1,32 +1,23 @@
 <script>
-  import {
-    getFirestore,
-    arrayRemove,
-    doc,
-    updateDoc,
-  } from "firebase/firestore";
-  import { getAuth } from "firebase/auth";
+  import { onDestroy } from "svelte/internal";
+  import { UserStore } from "../stores/user";
+  import axios from "axios";
 
-  const db = getFirestore();
-  const fbAuth = getAuth();
+  let myCurrentUser = null;
 
-  /* Wichtig, um zu wissen ob der User null ist!
-   let user = fbAuth.currentUser;
-   if (user !== null) {
-     console.log(`Habe die Email ${user.email}`);
-   } else {
-     console.log("Bin gerade nicht eingeloggt.");
-   }
-  */
+  // Die aktuellen Werte aus dem UserStore werden in die lokale Variable
+  // myCurrentUser übertragen und UserStore wird abonniert
+  const unsubscribe = UserStore.subscribe((currentUser) => {
+    myCurrentUser = { ...currentUser };
+  });
+
   export let getSubUpdate = null;
   export let article;
-  // export let promise;
 
   let qty = 1;
 
-  // const userRef = doc(db, "users", fbAuth.currentUser.uid);
   let cartItem = {
-    id: article.id,
+    _id: article._id,
     title: article.title,
     desc: article.desc,
     price: article.price,
@@ -47,12 +38,24 @@
 
   function removeArtikelHandler() {
     console.log("Article Removed!");
-    /* 
-    updateDoc(userRef, {
-      cart: arrayRemove(cartItem),
-    });
-    */
+    axios
+      .get(
+        // abfragen "removeFromCart" where cartId =
+        // zwei Requests/Abfragen zum Server
+        "http://localhost:4000/removeFromCart?cartId=" +
+          cartItem._id +
+          "&userId=" +
+          myCurrentUser.userId
+      )
+      .then((res) => res.data)
+      .then(() => {
+        // window.location.href = window.location.href;
+      })
+      .catch((error) => {
+        console.log("Error:" + error.message);
+      });
   }
+  onDestroy(unsubscribe);
 </script>
 
 <div class="box card">
@@ -142,7 +145,7 @@
       >To Gallery
     </a>
     <a
-      href="/catalog"
+      href="/#"
       on:click={removeArtikelHandler}
       class="button card-footer-item delete-btn"
     >
@@ -159,10 +162,10 @@
       align-items: center;
       width: 100%;
     }
-    .price-container {
+    /* .price-container {
       align-items: center;
       width: 100%;
-    }
+    } */
   }
 
   @media only screen and (min-width: 770px) {
