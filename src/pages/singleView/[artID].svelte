@@ -1,6 +1,6 @@
 <script>
-  import { getAuth } from "firebase/auth";
-  import { doc, getFirestore, getDoc } from "firebase/firestore";
+  // import { getAuth } from "firebase/auth";
+  // import { doc, getFirestore, getDoc } from "firebase/firestore";
   import { params } from "@roxi/routify";
   import Modal from "../../containers/Modal.svelte";
   import Platzhalter from "../../containers/Platzhalter.svelte";
@@ -8,44 +8,67 @@
   import Stars from "../../containers/Stars.svelte";
   import RatingContainer from "../../components/RatingContainer.svelte";
 
+  import { onMount, onDestroy } from "svelte/internal";
+  import { UserStore } from "../../stores/user";
+  import axios from "axios";
 
+  // const db = getFirestore();
+  // const fbAuth = getAuth();
+  // let user = fbAuth.currentUser;
 
-    /* 
-    1. Schon beim Aufbau der Einselansicht-Seite muss das article
-    geladen werden.
-    2. Dann muss bei diesem artikle geprueft werden, ob das artikle 
-    einen Kommentar hat.
-    3. Wenn er drinsteht, muessen die Sterne auf "Nummer von gegebenen 
-    Sterne" gesetzt werden. 
-    
-    */
-   
-   function fnRecAlreadyWritten() {
-     // console.log(recommendations[0].userId);
-     // console.log("User Id '" + user.uid + "'");
+  let myCurrentUser = null;
+  // Die aktuellen Werte aus dem UserStore werden in die lokale Variable
+  // myCurrentUser übertragen und UserStore wird abonniert
+  const unsubscribe = UserStore.subscribe((currentUser) => {
+    myCurrentUser = { ...currentUser };
+  });
 
-     if (recommendations && recommendations.length > 0 )  {
-       for (let el of recommendations) {
-        if (el.userId ===  user.uid) 
-        return true;
-      //  return recommendations.indexOf((el) => el.userId === user.uid) === -1;
+  let article = {};
+  let recommendations = null;
+  let recAlreadyWritten = false;
+
+  // Modal ist nicht zu sehen
+  let modalVisible = false;
+  let platzhalterVisible = false;
+
+  function fnRecAlreadyWritten() {
+    if (recommendations && recommendations.length > 0) {
+      for (let el of recommendations) {
+        if (el.userId === myCurrentUser.userId) return true;
+        //  return recommendations.indexOf((el) => el.userId === user.uid) === -1;
       }
       return false;
     }
   }
-    
-    /*
-    for (let el of userCart) {
-      if (el.id === article.id) return true;  
-    }
-    return false;
-    }
-    */
 
-    
-    function ratingHandler() {
-      // Ab jetzt ist Modal zu sehen
-    modalVisible = true;
+  const closeModal = () => {
+    modalVisible = false;
+  };
+
+  // $params.artID
+  const getArticleById = (id) => {
+    axios
+      // get article where articleId = artID
+      .get("http://localhost:4000/getArticleById?articleId=" + id)
+      .then((res) => res.data)
+      // response comming from the server
+      .then((data) => {
+        article = data.article;
+        recAlreadyWritten = fnRecAlreadyWritten(data.article.recommendations);
+      })
+      .catch((err) => {
+        console.log("The Error is: " + err.response.data.message);
+      });
+  };
+
+  
+  function ratingHandler() {
+    // Ab jetzt ist Modal zu sehen
+    if (myCurrentUser) {
+      modalVisible = true;
+    } else {
+      alert("You should login!")
+    }
     console.log("Rating Klicked");
   }
 
@@ -53,70 +76,12 @@
     console.log("Edit geklickt! ... ");
     platzhalterVisible = true;
   }
-  
-  let article = {};
-  const db = getFirestore();
-  const fbAuth = getAuth();
-  let recommendations = null;
-  let recAlreadyWritten = false;
-  let user = fbAuth.currentUser;
 
-  // Modal ist nicht zu sehen
-  let modalVisible = false;
-  let platzhalterVisible = false;
+  // onMount() ist useEffect(()=>{...}, []) in React
+  onMount(() => getArticleById($params.artID))
 
-  /*
-    hier muss ich irgendwie ereignisgesteuert
-    modalVisible = false;
-    einstellen, wenn der User auf den Canvas klickt
-    oder auf den Cancel-button im Modal
-    oder auf den "Send It" Button im Modal.
-  
-    Ich habe gestern genau so eine Technik implementiert!
-    Und ich muss sie sofort mit implementieren,
-    sonst bekomme ich das Modal nicht wieder abgeschaltet,
-    wenn es einmal auf dem Viewport ist.
-  */
+  onDestroy(unsubscribe);
 
-  /*  
-  Spec: 
-  User-Id ist user.uid: Das wird gebraucht, wenn eine neue Rec-Abfrage abgeschickt wird
-  Das brauche ich aber erst, wenn ich das Modal habe.
-
-  articleID: brauchen wir, damit die neue Rec. beim richtigen Artiekl eingetragen wird.
-    sie steht als Endpoint in der URL, die uns auf diese Seite gefuehrt hat:
-       http://localhost:5000/singleView/54812nfqi8291
-    die 54812nfqi8291 ist die artikel-ID, die ich auch in der 'articles'-collection finde.
-    Wie man an diese ID herankommt, steht in der Routify-Dokumentation. Muss recherchiert
-    werden.
-
-  Wenn ich den Artikel habe, habe ich auch alle existierenden Recs!
- */
-
-  // das aktuelle article-doc aus FS holen
-  // für die Einzelansicht: brauchtrecAlreadyWritten man das richtige getDoc(articleRef).then().catch();
-
-  const articleRef = doc(db, "articles", $params.artID);
-  getDoc(articleRef)
-    .then((docsnapshot) => {
-      if (docsnapshot.exists()) {
-        // es wurde was passendes gefunden ;
-        // Ich habe jetzt alle article-Daten
-        // Eine Kopie klonen mit spread-operator
-        article = { ...docsnapshot.data() };
-        // console.log(article.recommendations);
-        // Zum Testen, ob der User eine Recension geschrieben hat oder nicht
-        recommendations = article.recommendations;        
-
-        recAlreadyWritten = fnRecAlreadyWritten();
-      } else {
-        throw new Error("Nix passendes gefunden!");
-      }
-    })
-    .catch((error) => {
-      console.log("So eine Scheisse! " + error.message);
-    });
-   
 </script>
 
 <div class="cart-title">
@@ -130,7 +95,8 @@
       <!-- Das Image mit den Bewertungssternen -->
       <div class="card-footer-item img-container">
         <div>
-          <img class="img" src="/images/{article.img}" alt="Bild" />
+          <img class="img" src="/public/images/{article.img}" alt="Bild" />
+          <!--         src="images/{article.img}" -->
         </div>
         <!-- 
           Hier kommt die Durchschnitts-Bewertung aller 
@@ -146,7 +112,9 @@
 
       <!-- Hier kommt das Modal -->
       {#if modalVisible}
-        <Modal />
+        <Modal 
+            {article} {modalVisible} {closeModal} 
+        />
       {/if}
       <br class="line" />
 

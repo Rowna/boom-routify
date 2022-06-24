@@ -4,7 +4,7 @@
   import { onDestroy } from "svelte/internal";
   import axios from "axios";
 
-  let userInput = { emailInput: "", passWordInput: "" };
+  let userInput = { emailInput: "max@test.de", passWordInput: "max12345" };
 
   let myCurrentUser = null;
 
