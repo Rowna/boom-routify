@@ -55,7 +55,7 @@
       .then((data) => {
         article = data.article;
         recommendations = data.article.recommendations;
-        console.log(recommendations)
+        // console.log(recommendations)
         recAlreadyWritten = fnRecAlreadyWritten(data.article.recommendations);
       })
       .catch((err) => {
@@ -64,7 +64,7 @@
   };
 
   function ratingHandler() {
-    console.log("Bin im Rating Handler.");
+    // console.log("Bin im Rating Handler.");
     // Ab jetzt ist Modal zu sehen
     if (myCurrentUser) {
       modalVisible = true;

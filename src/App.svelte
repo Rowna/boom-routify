@@ -1,15 +1,30 @@
 <script>
   import { UserStore } from "./stores/user";
-  import firebase_config from "./server/firebase_config";
-  import { initializeApp } from "firebase/app";
+  import { onDestroy } from "svelte/internal";
+  // import firebase_config from "./server/firebase_config";
+  // import { initializeApp } from "firebase/app";
   import { Router } from "@roxi/routify";
   import { routes } from "../.routify/routes";
 
-  // UserStore.subscribe(() => {});
+  let myCurrentUser = null;
 
+  const unsubscribe = UserStore.subscribe((currentUser) => {
+    myCurrentUser = currentUser;
+  });
+
+  const localCurrentUser = localStorage.getItem("svelteCurrentUser")
+  // steht localCurrentUser im localStorage?
+  if ( localCurrentUser !== null ) {
+    // current User aus localStorage auslesen
+    myCurrentUser = JSON.parse(localCurrentUser);
+    // User store mit dem current user fuellen.
+    UserStore.set(myCurrentUser)
+  }
   
 
-  const fb = initializeApp(firebase_config);
+  // const fb = initializeApp(firebase_config);
+  onDestroy(unsubscribe)
+
 </script>
 
 <Router {routes} />

@@ -79,52 +79,14 @@
       .then((data) => {
         // Userdaten vom Server in den Store uebertragen:
         myCurrentUser = { ...data.user };
-        console.log(data.user)
-        console.log(myCurrentUser)
+        localStorage.setItem(
+          "svelteCurrentUser",
+          JSON.stringify(myCurrentUser)
+        );
         UserStore.set(myCurrentUser);
         $redirect("/catalog");
         alert(data.message);
       });
-
-    /*
-    createUserWithEmailAndPassword(
-      fbAuth,
-      userInput.emailInput,
-      userInput.passWordInput
-    )
-      .then((fbCredentials) => {
-        // ab hier ist der User eingeloggt, weil user nicht laenger null ist.
-        // das firebase SDK sorgt jetzt ohne meine Mitarbeit dafuer, dass der Token
-        // bei jeder Datenbankabfrage an firebase zurueckgeschickt wird.
-        // Damit hat Firebase automatisch alle Daten, die es braucht, um zu entscheiden,
-        // ob der User Zugriff auf Datenbankdaten hat oder nicht.
-        console.log("Registrierung scheinbar erfolgreich!");
-        fbUser = fbCredentials.user;
-        console.log("Aktuelle UserID: " + fbUser.uid);
-        // app.set({ user: fbUser });
-
-        // wenn ich das user-objekt von firebase erhalten habe, muss ich ausserdem noch
-        // einen user in der "users"-Collection anlegen. Dieser Eintrag muss folgende
-        // Bedingungen erfuellen:
-        //    * Die IDs in der Auth-Datenbank und in der "users"-DB muessen 1:1 gleich sein.
-        //    * Im Firestore wird der Name aus der Signup-Maske eingetragen.
-
-        // einen neuen Benutzer mit der ID $app.user.uid in Firestore anlegen!
-        // und den vollstaendigen Namen dort ablegen. (userInput.fullNameInput)
-        // setDoc() ist wieder ASYNCHRON, d.h. es gibt ein Ergebnis zurueck, das
-        // erneut in ein Promise "verpackt" wird. dieses Ergebnis wird der
-        // Form halber im naechsten .then() als callback-argument eingefangen.
-        return setDoc(doc(db, `/users/${fbUser.uid}`, ""), {
-          name: userInput.fullNameInput,
-        });
-      })
-      .then((setDocResult) => $redirect("/catalog"))
-      .catch((err) => {
-        console.log(
-          "Uh oh! Konnte keinen neuen Nutzer anlegen: " + err.message
-        );
-      });
-  */
   }
   onDestroy(unsubscribe);
 </script>

@@ -1,6 +1,4 @@
 <script>
-  import { doc, getDoc, getFirestore } from "firebase/firestore";
-  import { getAuth, onAuthStateChanged } from "firebase/auth";
   import { UserStore } from "../stores/user";
   import { onDestroy } from "svelte/internal";
   import { redirect } from "@roxi/routify";
@@ -11,18 +9,13 @@
     myCurrentUser = { ...currentUser };
   });
 
-  const db = getFirestore();
-  const fbAuth = getAuth();
-
-  // let user = fbAuth.currentUser;
-  let fullUserName = "";
-  let logoutButton = false;
+  // let fullUserName = "";
+  // let logoutButton = false;
 
   function logoutHandler() {
     myCurrentUser = null;
-    // UserStore updaten!
     UserStore.set(myCurrentUser);
-    // localStorage.removeItem("svelteJWT");
+    localStorage.removeItem("svelteCurrentUser");
     $redirect("/");
     window.location.href = window.location.href;
     console.log("Ausgeloggt!");
