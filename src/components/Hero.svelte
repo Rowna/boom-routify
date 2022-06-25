@@ -10,15 +10,15 @@
   <!-- Image für Bildschirm -->
   <div class="base-images">
     <div class="images up">
-      <img class="img-item" src="images/6.jpeg" alt="" />
+      <img class="img-item" src="images/6.jpeg" alt="firstImg" />
     </div>
 
     <div class="images middle">
-      <img class="img-item" src="images/2.jpeg" alt="" />
+      <img class="img-item" src="images/2.jpeg" alt="secondImg" />
     </div>
 
     <div class="images down">
-      <img class="img-item" src="images/1.jpeg" alt="" />
+      <img class="img-item" src="images/1.jpeg" alt="thirdImg" />
     </div>
   </div>
 
