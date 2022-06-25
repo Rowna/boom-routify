@@ -9,7 +9,7 @@
       <br />
       <p class="stars subtitle is-4">{rec.rating}</p>
     </div>
-    
+
     <div class="card-footer-item text-container subtitle is-5">
       {rec.text}
     </div>

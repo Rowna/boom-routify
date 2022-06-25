@@ -1,20 +1,14 @@
 <script>
-  // import { getAuth } from "firebase/auth";
-  // import { doc, getFirestore, getDoc } from "firebase/firestore";
   import { params } from "@roxi/routify";
   import Modal from "../../containers/Modal.svelte";
   import Platzhalter from "../../containers/Platzhalter.svelte";
 
-  import Stars from "../../containers/Stars.svelte";
+  import GetStars from "../../containers/GetStars.svelte";
   import RatingContainer from "../../components/RatingContainer.svelte";
 
   import { onMount, onDestroy } from "svelte/internal";
   import { UserStore } from "../../stores/user";
   import axios from "axios";
-
-  // const db = getFirestore();
-  // const fbAuth = getAuth();
-  // let user = fbAuth.currentUser;
 
   let myCurrentUser = null;
   // Die aktuellen Werte aus dem UserStore werden in die lokale Variable
@@ -23,9 +17,15 @@
     myCurrentUser = { ...currentUser };
   });
 
+  const artID = $params.artID;
   let article = {};
   let recommendations = null;
   let recAlreadyWritten = false;
+
+
+  console.log(article.recommendations)
+
+
 
   // Modal ist nicht zu sehen
   let modalVisible = false;
@@ -54,6 +54,8 @@
       // response comming from the server
       .then((data) => {
         article = data.article;
+        recommendations = data.article.recommendations;
+        console.log(recommendations)
         recAlreadyWritten = fnRecAlreadyWritten(data.article.recommendations);
       })
       .catch((err) => {
@@ -61,13 +63,13 @@
       });
   };
 
-  
   function ratingHandler() {
+    console.log("Bin im Rating Handler.");
     // Ab jetzt ist Modal zu sehen
     if (myCurrentUser) {
       modalVisible = true;
     } else {
-      alert("You should login!")
+      alert("You should login!");
     }
     console.log("Rating Klicked");
   }
@@ -77,11 +79,13 @@
     platzhalterVisible = true;
   }
 
+  function updateArticle() {
+    getArticleById(artID);
+  }
   // onMount() ist useEffect(()=>{...}, []) in React
-  onMount(() => getArticleById($params.artID))
+  onMount(() => getArticleById(artID));
 
   onDestroy(unsubscribe);
-
 </script>
 
 <div class="cart-title">
@@ -106,15 +110,13 @@
           beleiben alle Sterne leer.
         -->
         <div class="card-footer-item sterne">
-          <Stars />
+          <GetStars />
         </div>
       </div>
 
       <!-- Hier kommt das Modal -->
       {#if modalVisible}
-        <Modal 
-            {article} {modalVisible} {closeModal} 
-        />
+        <Modal {article} {modalVisible} {closeModal} {updateArticle} />
       {/if}
       <br class="line" />
 

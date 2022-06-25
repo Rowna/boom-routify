@@ -21,5 +21,4 @@
   .title-container {
     justify-content: center;
   }
-
 </style>

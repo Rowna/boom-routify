@@ -1,26 +1,14 @@
 <script>
-  // import { getAuth } from "firebase/auth";
-  // import singleView from "../pages/singleView/[artID].svelte";
   import { onDestroy } from "svelte/internal";
   import { UserStore } from "../stores/user";
   import axios from "axios";
 
   import Platzhalter from "../containers/Platzhalter.svelte";
 
-  // import {
-  //   arrayRemove,
-  //   arrayUnion,
-  //   doc,
-  //   getFirestore,
-  //   updateDoc,
-  // } from "firebase/firestore";
-
   export let article = {};
   export let userCart = [];
 
   let modalVisible = false;
-
-  // console.log(article);
 
   function isInCart() {
     for (let el of userCart) {
@@ -28,9 +16,6 @@
     }
     return false;
   }
-
-  // const fbAuth = getAuth();
-  // const db = getFirestore();
 
   let myCurrentUser = null;
   // Die aktuellen Werte aus dem UserStore werden in die lokale Variable
@@ -46,7 +31,6 @@
   // und mit Daten gefüllt, und das Child-Component "<CatalogItem>"
   // WARTET auf ein Prop mit dem Namen "article".
 
-  // let user = fbAuth.currentUser;
   let cartImage = isInCart() ? "shopping-cart-filled" : "shopping-cart";
   // console.log("CartImage: " + cartImage)
 
@@ -118,7 +102,7 @@
         nur wenn der User im Einzelansicht ist und auf das Bild dort klickt.
         Also href="SingleView{article.id}" brauch ich hier nicht.
       -->
-           <!-- {article._id} soll einheitlich aus Server sein -->
+      <!-- {article._id} soll einheitlich aus Server sein -->
       <a class="cartSingle" href="/singleView/{article._id}">
         <!-- svelte-ignore a11y-img-redundant-alt -->
         <img
