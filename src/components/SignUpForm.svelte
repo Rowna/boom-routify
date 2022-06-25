@@ -129,7 +129,7 @@
   onDestroy(unsubscribe);
 </script>
 
-<div class="base-container">
+<div class="signup-base-container">
   <div on:submit|preventDefault={submitHandler} class="form">
     <h1 class="signup-boom-title is-medium">BOOM | Sign Up</h1>
     <div class="form-container">
@@ -177,7 +177,7 @@
 </div>
 
 <style>
-  .base-container {
+  .signup-base-container {
     background-color: rgb(240, 235, 235);
     border-top-right-radius: 8%;
     border-bottom-left-radius: 10%;
@@ -193,7 +193,7 @@
     transform: translate(-50%, -50%);
   }
   @media only screen and (max-width: 700px) {
-    .base-container {
+    .signup-base-container {
       width: 300px;
       padding: 5px 5px;
       margin: 10px;

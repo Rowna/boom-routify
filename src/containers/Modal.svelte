@@ -107,19 +107,6 @@
   //     window.location.href = window.location.href;
   //   });
 
-  // getDoc(recoRef)
-  //   .then((docsnapshot) => {
-  //     // console.log(docsnapshot);
-
-  //     if (docsnapshot.exists()) {
-  //       myRecommendation = { ...docsnapshot.data() };
-  //     } else {
-  //       throw new Error("Nix passendes gefunden!");
-  //     }
-  //   })
-  //   .catch((error) => {
-  //     console.log("So eine Scheisse! " + error.message);
-  //   });
   onDestroy(unsubscribe);
 </script>
 
@@ -166,5 +153,8 @@
     .modal-card {
       margin: 0;
     }
+  }
+  .modal-background{
+    position: fixed;
   }
 </style>

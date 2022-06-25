@@ -134,7 +134,7 @@
             Entweder "Write your Recension" 
             oder "Edit your Recension"
           -->
-          {#if recAlreadyWritten}
+          {#if !recAlreadyWritten}
             <p class="rate-btn-container card-content">
               <!-- svelte-ignore a11y-missing-attribute -->
               <a class="button is-info edit-btn" on:click={EditRatingHandler}

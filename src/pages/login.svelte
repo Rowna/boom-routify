@@ -43,7 +43,7 @@
   onDestroy(unsubscribe);
 </script>
 
-<div class="base-container card">
+<div class="login-base-container card">
   <!-- on:submit|preventDefault={handleSubmit} -->
   <div class="form">
     <h1 class="title-cont is-medium">BOOM | Log In</h1>
@@ -83,7 +83,7 @@
 
 <style global lang="scss">
   @import "../main.scss";
-  .base-container {
+  .login-base-container {
     background-color: rgb(240, 235, 235);
     border-top-right-radius: 8%;
     border-bottom-left-radius: 10%;
@@ -99,7 +99,7 @@
     transform: translate(-50%, -50%);
   }
   @media only screen and (max-width: 700px) {
-    .base-container {
+    .login-base-container {
       width: 300px;
       padding: 5px 5px;
       margin: 10px;
