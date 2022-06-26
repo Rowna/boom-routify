@@ -1,10 +1,12 @@
 {
-    "transform": {
-      "^.+\\.js$": "babel-jest",
-      "^.+\\.svelte$": "svelte-jester",
-      ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "jest-transform-stub"
-    },
-    "moduleFileExtensions": ["svelte", "js"],
-    "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": ["@testing-library/jest-dom/extend-expect"]
-  }
+  "moduleFileExtensions": ["svelte", "js"],
+  "setupFilesAfterEnv": ["@testing-library/jest-dom/extend-expect"],
+  "testEnvironment": "jsdom",
+  "transform": {
+    "^.+\\.js$": "babel-jest",
+    "^.+\\.svelte$": "svelte-jester",
+    ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "jest-transform-stub"
+  },
+  "transformIgnorePatterns":  [ "node_modules"
+  ]
+}
