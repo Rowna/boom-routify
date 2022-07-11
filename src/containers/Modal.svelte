@@ -1,21 +1,10 @@
 <script>
   import SetStars from "./SetStars.svelte";
-  // import { params } from "@roxi/routify";
-  // import {
-  //   doc,
-  //   getFirestore,
-  //   updateDoc,
-  //   getDoc,
-  //   arrayUnion,
-  // } from "firebase/firestore";
-  // import { getAuth } from "firebase/auth";
   import axios from "axios";
   import { onMount, onDestroy } from "svelte/internal";
   import { UserStore } from "../stores/user";
-  import { redirect } from "@roxi/routify";
+  // import { redirect } from "@roxi/routify";
 
-
-  // let userFullName = "";
   export let article = {};
   export let updateArticle = null;
 

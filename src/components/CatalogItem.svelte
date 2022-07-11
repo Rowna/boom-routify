@@ -52,6 +52,7 @@
         .get(
           // abfragen "removeFromCart" where cartId =
           "http://localhost:4000/removeFromCart?cartId=" +
+          // soll hier ._id sein??
             cartItem.id +
             "&userId=" +
             myCurrentUser.userId
@@ -103,13 +104,11 @@
         Also href="SingleView{article.id}" brauch ich hier nicht.
       -->
       <!-- {article._id} soll einheitlich aus Server sein -->
+      <!-- <a class="cartSingle" href="#"> -->
       <a class="cartSingle" href="/singleView/{article._id}">
         <!-- svelte-ignore a11y-img-redundant-alt -->
-        <img
-          class="cartSingle img"
-          src="images/{article.img}"
-          alt="article image"
-        />
+        <!-- <img class="cartSingle img" src="images/{article.img}" alt="article" /> -->
+        <img class="cartImg" src="images/{article.img}" alt="article" />
       </a>
     </figure>
 

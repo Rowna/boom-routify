@@ -1,5 +1,5 @@
 <script>
-  import { params } from "@roxi/routify";
+  // import { params } from "@roxi/routify";
   import Modal from "../../containers/Modal.svelte";
   import Platzhalter from "../../containers/Platzhalter.svelte";
 
@@ -17,7 +17,7 @@
     myCurrentUser = { ...currentUser };
   });
 
-  const artID = $params.artID;
+  // const artID = $params.artID;
   let article = {};
   let recommendations = null;
   let recAlreadyWritten = false;
@@ -80,10 +80,10 @@
   }
 
   function updateArticle() {
-    getArticleById(artID);
+    // getArticleById(artID);
   }
   // onMount() ist useEffect(()=>{...}, []) in React
-  onMount(() => getArticleById(artID));
+  // onMount(() => getArticleById(artID));
 
   onDestroy(unsubscribe);
 </script>

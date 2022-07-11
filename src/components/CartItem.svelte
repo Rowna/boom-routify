@@ -36,7 +36,7 @@
     getSubUpdate(article.price);
   }
 
-  function removeArtikelHandler() {
+  function removeArticleHandler() {
     console.log("Article Removed!");
     axios
       .get(
@@ -146,7 +146,7 @@
     </a>
     <a
       href="/#"
-      on:click={removeArtikelHandler}
+      on:click={removeArticleHandler}
       class="button card-footer-item delete-btn"
     >
       Remove this Article

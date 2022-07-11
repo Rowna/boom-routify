@@ -1,8 +1,7 @@
 <script>
   import CatalogItem from "../components/CatalogItem.svelte";
-  import { getAuth } from "firebase/auth";
 
-  import { redirect } from "@roxi/routify";
+  // import { redirect } from "@roxi/routify";
   import axios from "axios";
 
   let docs = [];
@@ -15,7 +14,7 @@
     // die Daten aus dem Server holen
     .then((data) => {
       docs = data.articles;
-      $redirect("/catalog");
+      // $redirect("/catalog");
     })
     .catch((err) => {
       console.log("The Error is: " + err.response.data.message);

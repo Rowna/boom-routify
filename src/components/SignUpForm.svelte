@@ -1,5 +1,5 @@
 <script>
-  import { redirect } from "@roxi/routify";
+  // import { redirect } from "@roxi/routify";
   import axios from "axios";
   import { UserStore } from "../stores/user";
   import { onDestroy } from "svelte/internal";
@@ -84,7 +84,7 @@
           JSON.stringify(myCurrentUser)
         );
         UserStore.set(myCurrentUser);
-        $redirect("/catalog");
+        // $redirect("/catalog");
         alert(data.message);
       });
   }
@@ -127,7 +127,7 @@
     </div>
   </div>
   <div class="btn-contianer">
-    <button
+    <button disabled={!isValid}
       on:click|preventDefault={submitHandler}
       class="button is-rounded is-primary sign-up">Sign Up</button
     >
