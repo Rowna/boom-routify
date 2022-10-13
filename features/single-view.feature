@@ -1,5 +1,7 @@
 Feature: Single View
 
+    # Man Catalog
+
     As a user, guest or logged-in
     I want to see dedicated single views of catalog items
     In order to learn more about them and to decide whether to buy them.
@@ -9,7 +11,7 @@ Feature: Single View
         Scenario: Opening the Single View page of an article
             Given I have clicked on the title, image or price in the catalog view,
             When the Single View page oppens up,
-            Then I see all the images belonging to that item in a thumbnail gallery, and
+            Then I see all the images belonging to that item in a thumbnail gallery,
             And I see the title of the item
             And I see the price of the item
             And I see the full description of the item
